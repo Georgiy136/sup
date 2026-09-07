@@ -1,0 +1,202 @@
+title: FrontReportsCommonApiProxyAdapter
+httpApis:
+  - title: Список отчетов исходящего потока
+    api: GET|/api/outgoing_reports/list
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: reports_common_api_client
+
+  - title: Список отчетов с признаком потока
+    api: GET|/api/reports/names
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: reports_common_api_client
+
+  - title: API заявок по дням
+    api: POST|/api/support/last_status/day
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: API заявок по месяцам
+    api: POST|/api/support/last_status/month
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: API заявок по годам
+    api: POST|/api/support/last_status/year
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: Актуальные статусы заявок
+    api: POST|/api/support/current_status
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: Данные для виджета "Время"
+    api: POST|/api/support/avg_time
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: Рейтинг по сотрудникам по дням
+    api: POST|/api/support/employee
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: Данные для виджетов "Поток" и "Результативность"
+    api: POST|/api/support/efficiency
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: Для диаграммы "Динамика по заявкам"
+    api: POST|/api/support/ticket_dynamics
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: CategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+            - Name: EmployeeIDs
+              Type: int64
+              Tag: json:"employee_ids" binding:"required,min=1,unique,dive,eq=0|gt=0"
+              IsSlice: true
+    do: reports_common_api_client
+
+  - title: Данные для статистики по категории "Выгрузка"
+    api: POST|/api/support/unloads
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: DateFrom
+              Type: string
+              Tag: json:"date_from" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:DateTo"
+            - Name: DateTo
+              Type: string
+              Tag: json:"date_to" binding:"required,IsRFCDate,NoFuture=RFCDate"
+    do: reports_common_api_client

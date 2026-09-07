@@ -1,0 +1,35 @@
+### 200 Получение истории чата
+POST {{host}}/api/chat/get_history_chat
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "4j4h1675wjybdec9yg5s1zyfke",
+  "count_post": 100,
+  "from_post": "f8c3ztxp6tnst81cgozyj11gpr",
+  "from_create_at": "2026-05-04T15:17:08.74+03:00"
+}
+
+### 400 Получение истории чата
+POST {{host}}/api/chat/get_history_chat
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "ph8mnz11ipnsd8phxiqcd",
+  "count_post": 4,
+  "from_post": "k8q4cf3zkf89xcnkeigcraezeo3",
+  "from_create_at": "2026-05-04T15:17:02.398+03:00"
+}
+
+### 422 Чат не найден
+POST {{host}}/api/chat/get_history_chat
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "ph8mnz11ipnsd8phxiqcdma4uy",
+  "count_post": 4,
+  "from_post": "pf9fs8rghjyg8ychnh9xgupnfc",
+  "from_create_at": "2026-05-04T15:17:02.398+03:00"
+}

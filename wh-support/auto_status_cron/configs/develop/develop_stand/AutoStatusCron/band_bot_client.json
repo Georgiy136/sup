@@ -1,0 +1,7 @@
+{
+    "band_url": "http://localhost:8065",
+    "bot_token": "",
+    "band_channel_id": "",
+    "retry_count": 2,
+    "response_timeout": "5s"
+}

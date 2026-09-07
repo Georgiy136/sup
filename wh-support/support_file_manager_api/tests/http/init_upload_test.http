@@ -1,0 +1,71 @@
+### Генерация подписанной ссылки для загрузки TXT документа
+POST http://{{host}}/api/uploads/init_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_name": "файл_тестовый_123_;%().txt",
+  "file_size": 5,
+  "mime_type": "text/plain",
+  "ticket_id": 17104,
+  "category_id": 338,
+  "entity_type": "TICKET_ATTACHMENT",
+  "entity_data": {}
+}
+
+### Инициализация загрузки PDF документа
+POST http://{{host}}/api/uploads/init_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_name": "test_document.pdf",
+  "file_size": 5,
+  "mime_type": "application/pdf",
+  "ticket_id": 12345,
+  "category_id": 1,
+  "entity_type": "TICKET_ATTACHMENT"
+}
+
+### Инициализация загрузки изображения с entity_data
+POST http://{{host}}/api/uploads/init_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_name": "screenshot.png",
+  "file_size": 51200,
+  "mime_type": "image/png",
+  "ticket_id": 12345,
+  "category_id": 1,
+  "entity_type": "TICKET_ATTACHMENT"
+}
+
+### Ошибка - недопустимый MIME type
+POST http://{{host}}/api/uploads/init_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_name": "script.exe",
+  "file_size": 1024,
+  "mime_type": "application/x-msdownload",
+  "ticket_id": 12345,
+  "category_id": 1,
+  "entity_type": "TICKET_ATTACHMENT"
+}
+
+### Генерация подписанной ссылки для загрузки изображения PNG
+POST http://{{host}}/api/uploads/init_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_name": "img-251126184359-001-1.png",
+  "file_size": 69,
+  "mime_type": "image/png",
+  "ticket_id": 12345,
+  "category_id": 1,
+  "entity_type": "TICKET_ATTACHMENT"
+}
+

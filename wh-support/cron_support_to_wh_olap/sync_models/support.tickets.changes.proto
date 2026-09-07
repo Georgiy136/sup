@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package sync_models;
+
+option go_package = "./sync_models";
+
+import "google/protobuf/struct.proto";
+import "github.com/alta/protopatch/patch/go.proto";
+
+message Tickets {
+    repeated Ticket Data = 1 [(go.field).tags = 'json:"data" binding:"required,gt=0,dive"'];
+
+    message Ticket {
+        int64 TicketID = 1 [(go.field).tags = 'json:"ticket_id" binding:"required"'];
+        int64 CategoryID = 2 [(go.field).tags = 'json:"category_id" binding:"required"'];
+        string CategoryName = 3 [(go.field).tags = 'json:"category_name" binding:"required"'];
+        string ParentCategoryName = 4 [(go.field).tags = 'json:"parent_category_name" binding:"required"'];
+        string StatusID = 5 [(go.field).tags = 'json:"status_id" binding:"required,len=3"'];
+        string StatusDescription = 6 [(go.field).tags = 'json:"status_description" binding:"required"'];
+        int64 StatusEmployeeID = 7 [(go.field).tags = 'json:"status_employee_id" binding:"required"'];
+        optional string StatusGroupName = 8 [(go.field).tags = 'json:"status_group_name" binding:"omitempty"'];
+        optional int64 ScenarioOrderID = 9 [(go.field).tags = 'json:"scenario_order_id" binding:"omitempty"'];
+        optional string ScenarioName = 10 [(go.field).tags = 'json:"scenario_name" binding:"omitempty"'];
+        optional string RejectedComment = 11 [(go.field).tags = 'json:"rejected_comment" binding:"omitempty"'];
+        repeated ExtData Ext = 12 [(go.field).tags = 'json:"ext" binding:"omitempty,dive"'];
+        string ChDt = 13 [(go.field).tags = 'json:"ch_dt" binding:"required"'];
+        int64 CreateEmployeeID = 14 [(go.field).tags = 'json:"create_employee_id" binding:"required"'];
+        string CreateDt = 15 [(go.field).tags = 'json:"create_dt" binding:"required"'];
+
+        int64 LogId = 100 [(go.field).tags = 'json:"log_id"'];
+    }
+
+    message ExtData {
+        string FrontDataName = 1 [(go.field).tags = 'json:"front_data_name" binding:"required"'];
+        string DataName = 2 [(go.field).tags = 'json:"data_name" binding:"required"'];
+        google.protobuf.Value Value = 3 [(go.field).tags = 'json:"value" binding:"required"'];
+    }
+}

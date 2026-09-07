@@ -1,0 +1,6 @@
+GET {{host}}/api/tickets/update?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+###

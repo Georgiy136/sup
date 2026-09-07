@@ -1,0 +1,8 @@
+### API селектора в чате списка пользователей, имеющих доступ к заявке
+POST {{host}}/api/chat/get_ticket_employees_for_chat_selector?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 125
+}

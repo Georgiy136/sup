@@ -1,0 +1,132 @@
+title: FrontMapsApiProxyAdapter
+
+httpApis:
+  - title: Получение информации об офисах
+    api: POST|/v1/offices
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: Point
+          fields:
+            - Name: Latitude
+              Type: float64
+              Tag: json:"latitude" binding:"omitempty"
+            - Name: Longitude
+              Type: float64
+              Tag: json:"longitude" binding:"omitempty"
+        - type_name: InputStruct
+          fields:
+            - Name: OfficeIDs
+              Type: int64
+              Tag: json:"office_ids" binding:"omitempty,dive,OfficeID"
+              IsSlice: true
+            - Name: Types
+              Type: int64
+              Tag: json:"types" binding:"omitempty"
+              IsSlice: true
+            - Name: Limit
+              Type: int64
+              Tag: json:"limit" binding:"omitempty"
+            - Name: Offset
+              Type: int64
+              Tag: json:"offset" binding:"omitempty"
+            - Name: LmRouteID
+              Type: int64
+              Tag: json:"lm_route_id" binding:"omitempty"
+            - Name: Points
+              Type: Point
+              Tag: json:"points" binding:"omitempty"
+              IsSlice: true
+    do: maps_api_adapter_client
+    responses:
+      - code: 200
+        description: успешный результат
+        data_example: |
+          {
+            "offices": [
+              {
+                "office_id": 50008360,
+                "city": "Саратов",
+                "office_name": "Саратов Проспект Героев Отечества 4",
+                "full_address": "Саратов Проспект Героев Отечества 4",
+                "type_point": 8,
+                "latitude": 51.607553,
+                "longitude": 46.01309,
+                "parent_office_id": 316491,
+                "lm_route_id": 22346
+              }
+            ],
+            "total_count": 1
+          }
+
+  - title: Получение информации по спрутам
+    api: GET|/v1/spruts
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: maps_api_adapter_client
+    responses:
+      - code: 200
+        description: успешный результат
+        data_example: |
+          {
+            "spruts": [
+              {
+                "sprut_name": "SPRUT-117501",
+                "sprut_color": "#69C37F",
+                "offices": [
+                  {
+                    "office_id": 117230,
+                    "city": "Преображенка",
+                    "office_name": "Самара",
+                    "full_address": "с. Преображенка, ул. Индустриальная 1Б",
+                    "type_point": 11,
+                    "latitude": 53.091476,
+                    "longitude": 50.126734
+                  },
+                  {
+                    "office_id": 117432,
+                    "city": "Подольск",
+                    "office_name": "Подольск",
+                    "full_address": "СЦ Подольск Б5",
+                    "type_point": 11,
+                    "latitude": 55.413424,
+                    "longitude": 37.588793
+                  }
+                ]
+              }
+            ]
+          }
+
+  - title: Получение информации по спрутам (выводит офисы с type_point 11, 12, 13, 15, 16, 24)
+    api: GET|api/v1/filtered/offices
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: maps_api_adapter_client
+    responses:
+      - code: 200
+        description: успешный результат
+        data_example: |
+          {
+            "data": [
+              {
+                "office_id": 152610,
+                "city": "Тверь",
+                "office_name": "склад продавца Тверь",
+                "full_address": "Тверь Тверская обл Волоколамское шоссе 51Б",
+                "type_point": 12,
+                "latitude": 56.82539,
+                "longitude": 35.878665
+              },
+              {
+                "office_id": 146725,
+                "city": "Тюмень",
+                "office_name": "склад продавца Тюмень",
+                "full_address": "Тюмень Тюменская область, городской округ Тюмень Харьковская улица 77с1",
+                "type_point": 16,
+                "latitude": 57.142984,
+                "longitude": 65.597739
+              }
+            ]
+          }

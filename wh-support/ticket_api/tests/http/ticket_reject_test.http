@@ -1,0 +1,68 @@
+GET {{host}}/api/ticket/reject?employee_id={{employee_id}}&ticket_id=914
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+### Отклонение заявки для раздела "Мои заявки" и "Рабочие заявки" (В работе)
+POST {{host}}/api/tickets/reject_my_ticket_or_ticket_at_perform?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_id": 12345,
+  "rejected_comments": "Отклонение заявки"
+}
+
+### Отклонение заявки для раздела "Рабочие заявки" (На согласовании / Готово к исполнению)
+POST {{host}}/api/tickets/reject_ticket_at_approve_or_book?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "type_action": "status_approve_category",
+  "ticket_id": 12345,
+  "category_id": 13,
+  "status_id": "NGD",
+  "rejected_comments": "Отклонение заявки"
+}
+
+### 400 Отклонение заявки для раздела "Рабочие заявки" с URL в комментарии
+POST {{host}}/api/tickets/reject_ticket_at_approve_or_book?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "type_action": "status_approve_category",
+  "ticket_id": 17084,
+  "category_id": 13,
+  "status_id": "NGD",
+  "rejected_comments": "Тестовая заявка https://example.com"
+}
+
+
+## Отклонение заявки с в возможностью прикрепления файлов
+POST {{host}}/api/tickets/reject_v2?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "ticket_id":32945,
+    "rejected_comments":"отклонение",
+    "rejected_file": [{
+            "file_id": 123,
+            "file_type": "application/excel",
+            "file_size": 5284324,
+            "file_name": "text"
+        },
+        {
+            "file_id": 124,
+            "file_type": "application/excel",
+            "file_size": 5284324,
+            "file_name": "text2"
+        }
+    ]
+}

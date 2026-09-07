@@ -1,0 +1,125 @@
+title: ChatProviderApi
+description: |
+  Сервис интеграции с Mattermost для создания и чтения чатов по заявкам.
+
+httpApis:
+  - title: Создать чат по заявке
+    api: post|api/chat
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|CreateChat|BODY;employee_id
+
+  - title: Отправить сообщение в чат
+    api: post|api/chat/create_post
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: ChatID
+              Type: string
+              Tag: 'json:"chat_id" binding:"required,lte=30"'
+            - Name: Message
+              Type: string
+              Tag: 'json:"message" binding:"required,lte=5000"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: FileIDs
+              Type: string
+              Tag: 'json:"file_ids" binding:"omitempty,dive,lte=30"'
+              isSlice: true
+    do: CUSTOM|CreatePost|BODY;employee_id
+
+  - title: Получить чат
+    api: post|api/chat/get_chat
+    auth_type: basic
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: ChatID
+              Type: string
+              Tag: 'json:"chat_id" binding:"required,lte=30"'
+    do: CUSTOM|GetChat|BODY
+
+  - title: Получить историю сообщений чата
+    api: post|api/chat/get_history_chat
+    auth_type: basic
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: ChatID
+              Type: string
+              Tag: 'json:"chat_id" binding:"required,lte=30"'
+            - Name: CountPost
+              Type: int64
+              Tag: 'json:"count_post" binding:"required,gt=0,lte=200"'
+            - Name: FromPost
+              Type: string
+              Tag: 'json:"from_post" binding:"required,lte=30"'
+            - Name: FromCreateAt
+              Type: string
+              Tag: 'json:"from_create_at" binding:"required,IsRFC3339Nano"'
+    do: CUSTOM|GetHistoryChat|BODY
+
+  - title: Загрузить файл в Mattermost
+    api: post|api/chat/upload_file
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: Files
+              Type: multipart.FileHeader
+              Tag: form:"file" binding:"required"
+    do: CUSTOM|UploadFile|BODY;employee_id
+
+  - title: Скачать файл из Mattermost
+    api: post|api/chat/download_file
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: FileID
+              Type: string
+              Tag: 'json:"file_id" binding:"required,lte=30"'
+    do: CUSTOM|DownloadFile|BODY;employee_id

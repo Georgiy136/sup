@@ -1,0 +1,27 @@
+{
+  "file_validation_cron": {
+    "cron_time_sleep_on_error": "1m",
+    "cron_time_sleep_on_ok": "1m",
+    "cron_time_sleep_on_no_data": "1m"
+  },
+  "expired_uploads_deletion_cron": {
+    "cron_time_sleep_on_error": "1m",
+    "cron_time_sleep_on_ok": "1m",
+    "cron_time_sleep_on_no_data": "1m"
+  },
+  "file_deletion_cron": {
+    "cron_time_sleep_on_error": "1m",
+    "cron_time_sleep_on_ok": "1m",
+    "cron_time_sleep_on_no_data": "1m"
+  },
+  "preparing_to_delete_not_attached_to_ticket_file": {
+    "cron_time_sleep_on_error": "24h",
+    "cron_time_sleep_on_ok": "24h",
+    "cron_time_sleep_on_no_data": "24h"
+  },
+  "file_transfer_cron": {
+    "cron_time_sleep_on_error": "1m",
+    "cron_time_sleep_on_ok": "1m",
+    "cron_time_sleep_on_no_data": "1m"
+  }
+}

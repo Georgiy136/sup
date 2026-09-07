@@ -1,0 +1,86 @@
+### Получить ссылку на загрузку файла (валидный запрос)
+POST {{host}}/api/files/get_upload_link?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "mime_type": "text/plain",
+  "file_size": 4,
+  "file_name": "Тест.txt"
+}
+
+### Получить ссылку на загрузку файла (валидный запрос)
+POST {{host}}/api/files/get_upload_link?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "mime_type": "text/plain; charset=utf-8",
+  "file_size": 4,
+  "file_name": "Тест.txt"
+}
+
+### 400 Получить ссылку на загрузку файла (без обязательных полей)
+POST {{host}}/api/files/get_upload_link?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "file_size": 4
+}
+
+### Подтвердить загрузку файла (валидный запрос)
+POST {{host}}/api/files/complete_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "upload_id": 43,
+  "file_id": 47
+}
+
+### Получить ссылку на скачивание файла (валидный запрос)
+POST {{host}}/api/files/download_url?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "file_id": 47,
+  "ticket_id": 17201
+}
+
+### 400 Получить ссылку на скачивание файла (без обязательных полей)
+POST {{host}}/api/files/download_url?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "file_id": 1
+}
+
+### 400 Получить ссылку на скачивание файла (без обязательных полей)
+POST {{host}}/api/files/download_url?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "file_id": 1
+}
+
+### Отменить загрузку файла (валидный запрос)
+POST {{host}}/api/files/cancel_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "upload_id": 43,
+  "file_id": 47
+}

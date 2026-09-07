@@ -1,0 +1,11 @@
+### 200 Загрузка файла
+POST {{host}}/api/chat/upload_file?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
+
+test file content
+--WebAppBoundary--

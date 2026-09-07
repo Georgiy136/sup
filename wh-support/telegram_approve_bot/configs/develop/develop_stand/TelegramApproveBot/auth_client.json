@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://localhost:8084"
+  ],
+  "apis": {
+    "send_phone_code": "/api/send_code",
+    "check_login": "/api/login"
+  },
+  "auth": {
+    "type": "without",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s",
+  "retry_count": 2
+}

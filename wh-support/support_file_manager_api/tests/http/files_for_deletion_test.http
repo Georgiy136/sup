@@ -1,0 +1,3 @@
+### Получение файлов со статусом DELETE_PENDING
+GET http://{{host}}/api/files/files_for_deletion
+Authorization: Basic {{basicAuth}}

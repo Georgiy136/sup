@@ -1,0 +1,79 @@
+{
+  "response_timeout": "5s",
+  "retry_count": 1,
+  "auth": {
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "no_predefined_urls": true,
+  "apis": {
+    "wh.buildings.administration.building.get.by_office/v001": "http://localhost:8080/wh.buildings.administration.building.get.by_office/v001",
+    "wh.sprutenv.office.stagepart.get.by_wh/v001": "http://localhost:8080/wh.sprutenv.office.stagepart.get.by_wh/v001",
+    "sprutenv.storageplaces.info.get.by_sections/external/v001": "http://localhost:8080/sprutenv.storageplaces.info.get.by_sections/external/v001",
+    "sprutenv.office.streets.get_by_stage/v001": "http://localhost:8080/sprutenv.office.streets.get_by_stage/v001"
+  },
+  "mock": {
+    "wh.buildings.administration.building.get.by_office/v001": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": [
+            {
+              "office_id": 1,
+              "ch_employee_id": 1,
+              "building_id": "A1",
+              "ch_dt": "2023-07-18T12:00:00",
+              "is_default": true
+            }
+          ]
+        }
+      }
+    },
+    "wh.sprutenv.office.stagepart.get.by_wh/v001": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "std.std.err_biz.stage.not_found",
+              "message": "Этаж не найден",
+              "detail": "Этаж не найден в системе",
+              "message_values": {}
+            }
+          ]
+        }
+      }
+    },
+    "sprutenv.storageplaces.info.get.by_sections/external/v001": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "std.std.err_biz.storage_place.not_found",
+              "message": "Место хранения не найдено",
+              "detail": "Место хранения не найдено в системе",
+              "message_values": {}
+            }
+          ]
+        }
+      }
+    },
+    "sprutenv.office.streets.get_by_stage/v001": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "std.std.err_biz.street.not_found",
+              "message": "Улица не найдена",
+              "detail": "Улица не найдена в системе",
+              "message_values": {}
+            }
+          ]
+        }
+      }
+    }
+  }
+}

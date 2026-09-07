@@ -1,0 +1,28 @@
+syntax = "proto3";
+package sync_models;
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/wrappers.proto";
+option (gogoproto.goproto_getters_all) = false;
+option (gogoproto.goproto_unkeyed_all) = false;
+option (gogoproto.goproto_unrecognized_all) = false;
+option (gogoproto.goproto_sizecache_all) = false;
+
+message Tickets {
+    repeated TicketData Data = 1 [(gogoproto.jsontag) = "data", (gogoproto.nullable) = false];
+
+    message TicketData {
+        google.protobuf.StringValue Ext = 1 [(gogoproto.jsontag) = "ext", (gogoproto.wktpointer) = true];
+        string ChDt = 2 [(gogoproto.jsontag) = "ch_dt"];
+        int64 ChEmployeeID = 3 [(gogoproto.jsontag) = "ch_employee_id"];
+        string CreateDt = 4 [(gogoproto.jsontag) = "create_dt"];
+        int64 TicketID = 5 [(gogoproto.jsontag) = "ticket_id"];
+        int64 CategoryID = 6 [(gogoproto.jsontag) = "category_id"];
+        string status_id = 7 [(gogoproto.jsontag) = "status_id"];
+        google.protobuf.StringValue Comments = 8 [(gogoproto.jsontag) = "comments", (gogoproto.wktpointer) = true];
+        google.protobuf.StringValue RejectedComments = 9 [(gogoproto.jsontag) = "rejected_comments", (gogoproto.wktpointer) = true];
+        int64 CreateEmployeeID = 10 [(gogoproto.jsontag) = "create_employee_id"];
+        google.protobuf.Int64Value ApproveEmployeeID = 11 [(gogoproto.jsontag) = "approve_employee_id", (gogoproto.wktpointer) = true];
+        google.protobuf.Int64Value PerformEmployeeID = 12 [(gogoproto.jsontag) = "perform_employee_id", (gogoproto.wktpointer) = true];
+    }
+}

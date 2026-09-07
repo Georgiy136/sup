@@ -1,0 +1,11 @@
+{
+  "jet_stream_connection": "nats://localhost:4222",
+  "data_source": "support_pgx",
+  "log_id_persistent": true,
+  "channels": [
+    {
+      "handler_key": "tickets.status.change.publisher",
+      "channel_name": "tickets.status.change"
+    }
+  ]
+}

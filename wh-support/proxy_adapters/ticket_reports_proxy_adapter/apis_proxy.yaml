@@ -1,0 +1,184 @@
+title: Support Tickets Reports Api Proxy Adapter
+description: Прокси для передачи данных с отчетов в Support
+
+httpApis:
+  - title: API заявок по дням
+    api: Click|/sql/wh_support_day
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: API заявок по месяцам
+    api: Click|/sql/wh_support_month
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: API заявок по годам
+    api: Click|/sql/wh_support_year
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: API детализация по ID заявки
+    api: Click|/sql/wh_support_detail
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: json:"ticket_id" binding:"required,gt=0"
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: Рейтинг по сотрудникам по дням
+    api: Click|/sql/wh_support_by_employee
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: СategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: Для диаграммы "Динамика по заявкам"
+    api: Click|/sql/wh_support_ticket_dynamics
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: СategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+            - Name: EmployeeIDs
+              Type: int64
+              Tag: json:"employee_id" binding:"required,min=1,unique,dive,eq=0|EmployeeID"
+              IsSlice: true
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: Актуальные статусы заявок
+    api: Click|/sql/wh_support_current_status
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: СategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: Данные для виджета "Время"
+    api: Click|/sql/wh_support_avg_time
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: СategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: Данные для виджетов "Поток" и "Результативность"
+    api: Click|/sql/wh_support_efficiency
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+            - Name: СategoryIDs
+              Type: int64
+              Tag: json:"category_ids" binding:"required,unique,min=1,dive,gt=0"
+              IsSlice: true
+    do: fasthttp_clickhousestoredproc_client
+
+  - title: Данные для статистики по категории "Выгрузка"
+    api: Click|/sql/wh_support_unload
+    auth_type: keycloak
+    body:
+      structure_name: Body
+      schema:
+        - type_name: Body
+          fields:
+            - Name: PB
+              Type: string
+              Tag: json:"pb" binding:"required,IsRFCDate,BeforeDateOrEqual=RFCDate:PE"
+            - Name: PE
+              Type: string
+              Tag: json:"pe" binding:"required,IsRFCDate,NoFuture=RFCDate"
+    do: fasthttp_clickhousestoredproc_client

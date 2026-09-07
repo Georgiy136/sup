@@ -1,0 +1,15 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "GetOfficesWithInactive": "/v1/offices"
+  },
+  "auth": {
+    "type": "without",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

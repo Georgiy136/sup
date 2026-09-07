@@ -1,0 +1,23 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "InitUpload": "api/uploads/init_upload",
+    "ConfirmUpload": "api/uploads/confirm_upload",
+    "GetDownloadURL": "api/files/download_url",
+    "CancelUpload": "api/uploads/cancel_upload",
+    "AttachFilesToTicket": "api/files/attach_to_ticket",
+    "GetFileInfo": "api/files/get_file_info"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "10s",
+  "retry_count": 2
+}

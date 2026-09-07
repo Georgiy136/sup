@@ -1,0 +1,10 @@
+{
+  "urls": [
+    "localhost:8095/srv/access_manager_basic_auth"
+  ],
+  "apis": {
+    "GetPermittedAppActions": "/api/v1/permitted_appactions"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2
+}

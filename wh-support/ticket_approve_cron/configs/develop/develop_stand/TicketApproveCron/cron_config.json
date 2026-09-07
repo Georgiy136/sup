@@ -1,0 +1,8 @@
+{
+  "ticket_approve_cron": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_ok": "10s",
+    "cron_time_sleep_on_no_data": "10s",
+    "count_data_without_sleep": 25
+  }
+}

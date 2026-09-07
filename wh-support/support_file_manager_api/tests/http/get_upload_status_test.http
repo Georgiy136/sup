@@ -1,0 +1,17 @@
+### Получение статуса загрузки
+POST http://{{host}}/api/uploads/get_upload_status?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 20
+}
+
+### Ошибка - несуществующий upload_id
+POST http://{{host}}/api/uploads/get_upload_status?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 999999999
+}

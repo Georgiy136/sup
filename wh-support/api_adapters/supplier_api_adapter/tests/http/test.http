@@ -1,0 +1,9 @@
+### Получение информации о поставщиках по nm_ids для селектора
+POST {{host}}/api/supplier/get_supplier_info_by_nm_ids?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nm_ids": [123, 235]
+}

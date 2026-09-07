@@ -1,0 +1,25 @@
+title: Aдаптер для инпутов сервиса заявок.
+description: Сервис адаптации данных апи сервиса настроек офисов и блоков системы Wh-Tare на сторенве для апи инпутов заявок Wh Support.
+httpApis:
+  - title: Получение из справочника всех типов ЛО для селектора
+    description: "Получение из справочника всех тайп поинтов офисов и их названий для селектора"
+    api: GET|api/type_point/get_filtered_type_points
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetFilteredTypePoint|employee_id
+    responses:
+      - code: 200
+        data_example: |-
+          {
+            "data": [
+              {
+                "type_point": 1,
+                "type_point_name": "фирменный ПВЗ"
+              }
+            ]
+          }

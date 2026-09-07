@@ -1,0 +1,15 @@
+{
+  "Key": "support_pgx",
+  "Connections": [
+    "host=wh-writeoff-prepare.fd.whs.wb.ru port=5432 user=readuser password=agyqqjbq178129ejdvdiks dbname=wh_support sslmode=disable TimeZone=Europe/Moscow connect_timeout=10"
+  ],
+  "Driver": "pgx",
+  "MaxConnections": 10,
+  "MinConnections": 1,
+  "MaxOperationAttempts": 3,
+  "MaxOperationDeadline": "5s",
+  "TotalOperationsDeadline": "15s",
+  "ConnMaxLifetime": "5m",
+  "ConnMaxIdleTime": "5m",
+  "NeedPing": true
+}

@@ -1,0 +1,10 @@
+{
+  "response_timeout": "1000s",
+  "retry_count": 1,
+  "auth": {
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "no_predefined_urls": true
+}

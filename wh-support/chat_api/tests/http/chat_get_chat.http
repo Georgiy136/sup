@@ -1,0 +1,35 @@
+### Открытие существующего чата
+POST {{host}}/api/chat/get_chat?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 11125
+}
+
+### Открытие несуществующего чата
+POST {{host}}/api/chat/get_chat?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 11126
+}
+
+### 422 Заявка не существует
+POST {{host}}/api/chat/get_chat?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 11127
+}
+
+### 403 У пользователя нет прав
+POST {{host}}/api/chat/get_chat?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 11128
+}

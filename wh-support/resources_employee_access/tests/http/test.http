@@ -1,0 +1,36 @@
+POST {{host}}/api/type_actions/delete?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "typeaction_id": "create_ticket_category_test"
+}
+
+###
+POST {{host}}/api/type_actions/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "typeaction_id": "create_ticket_category_test",
+  "typeaction_desc": "Создание заявки категории",
+  "ch_employee_id": {{employee_id}}
+}
+
+###
+GET {{host}}/api/type_actions?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json
+
+###
+POST {{host}}/api/get_employees_by_action?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "action_id":"system.approve"
+}
+

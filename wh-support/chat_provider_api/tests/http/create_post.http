@@ -1,0 +1,24 @@
+### 200 Отправка сообщения в чат
+POST {{host}}/api/chat/create_post?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "4j4h1675wjybdec9yg5s1zyfke",
+  "ticket_id": 17088,
+  "message": "12",
+  "file_ids": [
+    "toqrfphx47n8j8buh9xpebqiuo"
+  ]
+}
+
+### 400 Отправка сообщения в чат (ошибка валидации)
+POST {{host}}/api/chat/create_post?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "ph8mnz11ipnsd8phxiqcdma4uy11",
+  "ticket_id": 17088,
+  "message": "12"
+}

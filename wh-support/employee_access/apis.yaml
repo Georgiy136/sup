@@ -1,0 +1,56 @@
+title: Employee Access
+description: Сервис проверки экшенов wh-support
+
+### Ошибки
+Общие для всех API коды ошибок:
+  - code: 400
+    description: api validation error
+  - code: 401
+    description: ошибка авторизации
+  - code: 500
+    description: internal service error
+
+Все ошибки возвращаются в формате: |-
+  {
+    "errors": [
+      {
+        "error": "some_error_code",
+        "message": "error message",
+        "detail": "some error details"
+      }
+    ]
+  }
+
+httpApis:
+  - title: Фильтрация доступных пользователю action'ов по имени action'а
+    description: |
+      В запросе передаётся массив имён action'ов. В ответе - массив имён action'ов из запроса, к которым есть доступ у сотрудника,
+      выполняющего запрос, или id которого передано в query-параметре.
+    api: post|api/actions_by_name
+    auth_type: basic+e
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: Actions
+              Type: string
+              IsSlice: true
+              Tag: 'json:"actions" binding:"required"'
+    do: CUSTOM|GetEmployeeAllowedActionsHandler|BODY
+    responses:
+      - code: 200
+        description: Доступные пользователю action'ы
+        data_example: |- 
+          {
+            "data": {
+              "app_actions": [
+                {
+                  "appaction_name": "test"
+                },
+                {
+                  "appaction_name": "action.accessManage1"
+                }
+              ]
+            }
+          }

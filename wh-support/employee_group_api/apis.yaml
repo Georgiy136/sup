@@ -1,0 +1,606 @@
+title: EmployeeGroupApi
+description: |
+  Сервис групп доступов
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Создание группы доступа
+    api: post|api/groups/create
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: CreateGroup
+      schema:
+        - type_name: CreateGroup
+          fields:
+            - Name: GroupName
+              Type: string
+              Tag: 'json:"group_name" binding:"required,max=100"'
+            - Name: ExternalAction
+              Type: "*string"
+              Tag: 'json:"external_action" binding:"omitempty,max=100"'
+    do: CUSTOM|CreateGroup|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Группа создана"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_id": 10,
+                "group_name": "hahaha",
+                "external_action": "CreateCategory.Main"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка создания группы"
+        data_example: |-
+          {
+              "errors" : [
+                {
+                  "error"  : "group.alreadyexists",
+                  "detail" : "group_name: hahaha",
+                  "message": "Группа доступа с данным названием уже существует."
+                }
+              ]
+          }
+
+  - title: Редактирование внешнего экшена у группы доступа
+    api: post|api/groups/update_external_action
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: UpdateExternalActionGroup
+      schema:
+        - type_name: UpdateExternalActionGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: ExternalAction
+              Type: "*string"
+              Tag: 'json:"external_action" binding:"omitempty,max=100"'
+    do: CUSTOM|UpdateExternalActionGroup|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Группа обновлена"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_id": 55,
+                "group_name": "Тестовая группа на перформ",
+          	    "external_action": "CreateCategory.Main"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка обновления группы"
+        data_example: |-
+          {
+              "errors" : [
+                {
+                  "error"  : "group.alreadyexists",
+                  "detail" : "group_name: hahaha",
+                  "message": "Группа доступа с данным названием уже существует."
+                }
+              ]
+          }
+
+  - title: Удаление группы доступа
+    api: post|api/groups/delete
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: DeleteGroup
+      schema:
+        - type_name: DeleteGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    do: CUSTOM|DeleteGroup|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Группа удалена"
+      - code: 422
+        description: "Ошибка удаления группы"
+        data_example: |-
+          {
+              "errors" : [
+                {
+                  "error": "group.notexists",
+                  "detail": "group_name: 1000",
+                  "message": "Группа с данным номером не существует."
+                }
+              ]
+          }
+
+  - title: Получение списка всех групп доступов
+    api: get|api/groups/get_all
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+      - "action.categoryConstructor"
+    do: CUSTOM|GetAllGroups
+    responses:
+      - code: 200
+        description: "Список несистемных групп пользователей"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_id": 4,
+                "group_name": "Подтверждение заявок по исключению тар из автосписания",
+                "external_action": "CreateCategory.Main"
+              },
+              {
+                "group_id": 5,
+                "group_name": "Исполнение заявок по исключению тар из автосписания",
+                "external_action": null
+              },
+              {
+                "group_id": 1,
+                "group_name": "Подтверждение заявок по созданию офиса",
+                "external_action": null
+              },
+              {
+                "group_id": 3,
+                "group_name": "Исполнение заявок по добавлению офиса в конфиги на бэкенде",
+                "external_action": null
+              },
+              {
+                "group_id": 2,
+                "group_name": "Исполнение заявок по добавлению офиса на спрут",
+                "external_action": null
+              },
+              {
+                "group_id": 10,
+                "group_name": "hahaha",
+                "external_action": null
+              }
+            ]
+          }
+
+  - title: Получение списка сотрудников по группе доступа
+    api: post|api/groups/get_employees
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: GetEmployeesByGroup
+      schema:
+        - type_name: GetEmployeesByGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    do: CUSTOM|GetEmployeesByGroup|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Список пользователей с ФИО из указанной группы"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ch_dt": "2024-03-26T13:24:44.703573",
+                "employee_id": 546950,
+                "employee_name": "Алексей Санин",
+                "ch_employee_id": 1156237,
+                "ch_employee_name": "ияяяяан"
+              },
+              {
+                "ch_dt": "2024-05-08T17:46:43.507077",
+                "employee_id": 1156237,
+                "employee_name": "ияяяяан",
+                "ch_employee_id": 1156237,
+                "ch_employee_name": "ияяяяан"
+              }
+            ]
+          }
+      - code: 204
+        description: "В группе нет пользователей"
+      - code: 422
+        description: "Ошибка получения списка пользователей"
+        data_example: |-
+          {
+              "errors" : [
+                {
+                  "error"  : "group.notexists",
+                  "detail" : "group_name: 100",
+                  "message": "Группа с данным номером не существует."
+                }
+              ]
+          }
+
+  - title: Получение списка групп доступов сотрудника
+    api: post|api/groups/get_groups_by_employee
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    body:
+      structure_name: GetGroupsByEmployee
+      schema:
+        - type_name: GetGroupsByEmployee
+          fields:
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,LteInt32"'
+    do: CUSTOM|GetGroupsByEmployee|BODY
+    responses:
+      - code: 200
+        description: "Список групп, в которых состоит сотрудник"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_ids": [
+                  {
+                    "group_id": 1,
+                    "group_name": "Подтверждение заявок по созданию офиса"
+                  },
+                  {
+                    "group_id": 2,
+                    "group_name": "Исполнение заявок по добавлению офиса на спрут"
+                  }
+                ],
+                "employee_id": 2
+              }
+            ]
+          }
+
+  - title: Добавление сотрудника в группу доступа
+    api: post|api/groups/add_employee
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: AddEmployeeToGroup
+      schema:
+        - type_name: AddEmployeeToGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|AddEmployeeToGroup|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Пользователь добавлен в группу"
+      - code: 422
+        description: "Ошибка добавления пользователя в группу"
+        data_example: |-
+          {
+              "errors" : [
+                {
+                  "error"  : "group.notexists",
+                  "detail" : "group_name: 100",
+                  "message": "Группа с данным номером не существует."
+                }
+              ]
+          }
+
+  - title: Удаление сотрудника из группы доступа
+    api: post|api/groups/delete_employee
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: DeleteEmployeeFromGroup
+      schema:
+        - type_name: DeleteEmployeeFromGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|DeleteEmployeeFromGroup|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Пользователь удален из группы"
+      - code: 422
+        description: "Ошибка удаления пользователя из группы"
+        data_example: |-
+          {
+              "errors" : [
+                {
+                  "error"  : "group.notexists",
+                  "detail" : "group_name: 100",
+                  "message": "Группа с данным номером не существует."
+                }
+              ]
+          }
+
+  - title: Получение списка категорий и групп доступов для каждой категории
+    api: get|api/groups/categories_with_groups
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    do: CUSTOM|GetCategoriesWithGroups
+    responses:
+      - code: 200
+        description: "Список категорий и групп доступов для каждой категории"
+        data_example: |-
+          {
+            "data": [{
+                    "category_id": 157,
+                    "access_groups": [{
+                            "group_id": 115,
+                            "status_id": "AHP",
+                            "group_name": "Закрытие блоков. Согласующие. Бизнес",
+                            "typeaction_id": "status_approve_category",
+                            "external_action": null,
+                            "typeaction_desc": "Подтвержедние статуса категории",
+                            "status_description": "Согласование с бизнесом"
+                        }, {
+                            "group_id": 1,
+                            "status_id": "CMH",
+                            "group_name": "Системная группа",
+                            "typeaction_id": "status_perform_category",
+                            "external_action": null,
+                            "typeaction_desc": "Исполнение статуса категории",
+                            "status_description": "Проверка на неудаленные МХ"
+                        }, {
+                            "group_id": 1,
+                            "status_id": "DEL",
+                            "group_name": "Системная группа",
+                            "typeaction_id": "status_perform_category",
+                            "external_action": null,
+                            "typeaction_desc": "Исполнение статуса категории",
+                            "status_description": "Отправка команды на удаление блока"
+                        }, {
+                            "group_id": 116,
+                            "status_id": "ACR",
+                            "group_name": "Закрытие блоков. Согласующие. Команда ревизии",
+                            "typeaction_id": "status_approve_category",
+                            "external_action": null,
+                            "typeaction_desc": "Подтвержедние статуса категории",
+                            "status_description": "Согласование с командой ревизии"
+                        }
+                    ],
+                    "category_name": "Закрытие блока "
+                }
+            ]
+          }
+
+  - title: Добавление группы доступа в категорию
+    api: post|api/groups/add_group_to_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: AddGroupToCategory
+      schema:
+        - type_name: AddGroupToCategory
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required,min=5,max=50"'
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    do: CUSTOM|AddGroupToCategory|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Группа добавлена в категорию"
+        data_example: |-
+          {
+            "data": [
+              {
+                "category_id": 31,
+                "typeaction_id": 'status_category',
+                "group_id": 55
+              }
+            ]
+          }
+      - code: 422
+        description: "Такая связка категории с группой уже существует"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "categorygroup.alreadyexists",
+                "detail": "category_id: 31, typeaction_id: create_ticket_category, group_id: 55",
+                "message": "Такая связка категории с группой уже существует."
+              }
+            ]
+          }
+
+  - title: Редактирование группы доступа по категории и типу действия
+    api: post|api/groups/update_group_for_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: UpdateGroupForCategory
+      schema:
+        - type_name: UpdateGroupForCategory
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required"'
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    do: CUSTOM|UpdateGroupForCategory|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Редактирование группы доступа успешно"
+        data_example: |-
+          {
+            "data": null
+          }
+      - code: 422
+        description: "Такая связка категории с группой уже существует"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "categorygroup.alreadyexists",
+                "detail": "category_id: 185, typeaction_id: create_ticket_category, group_id: 100",
+                "message": "Такая связка категории с группой уже существует."
+              }
+            ]
+          }
+
+  - title: Удаление группы доступа в категории
+    api: post|api/groups/delete_group_to_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: DeleteGroupToCategory
+      schema:
+        - type_name: DeleteGroupToCategory
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required,min=5,max=50"'
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    do: CUSTOM|DeleteGroupToCategory|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Связь группы и категории удалена"
+        data_example: |-
+          {
+            "data": null
+          }
+      - code: 422
+        description: "Такая связка категории с группой не существует"
+        data_example: |-
+          {
+            "errors":[
+              {
+                "error":"categorygroup.notexists",
+                "detail":"category_id: 185, , typeaction_id: create_ticket_category, group_id = 99",
+                "message":"Такая связка категории с группой не существует."
+              }
+            ]
+          }
+
+  - title: Изменение имени для группы доступа
+    api: post|api/groups/update_group_name
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: UpdateGroupName
+      schema:
+        - type_name: UpdateGroupName
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: GroupName
+              Type: string
+              Tag: 'json:"group_name" binding:"required,max=100"'
+    do: CUSTOM|UpdateGroupName|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Название группы изменено"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_id": 55,
+                "group_name": "Тестовая группа на перформ",
+              }
+            ]
+          }

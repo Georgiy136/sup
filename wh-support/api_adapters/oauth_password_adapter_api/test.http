@@ -1,0 +1,2 @@
+GET {{host}}/api/kk/auth/password?employee_id=1
+Authorization: Basic {{login}} {{password}}

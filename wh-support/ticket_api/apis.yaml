@@ -1,0 +1,2116 @@
+title: TicketApi
+description: |
+  Сервис заявок
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Создать новую заявку V2
+    api: post|api/tickets/create
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: TicketName
+              Type: "string"
+              Tag: 'json:"ticket_name" binding:"required,lte=300"'
+            - Name: InfoForCreate
+              Type: "json.RawMessage"
+              Tag: 'json:"info_for_create"'
+    do: CUSTOM|CreateTicket|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка создана"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ticket_id": 32,
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: название заявки содержит URL"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; ticket name must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка создания заявки"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "category.notfound" ,
+                "message": "Категории не существует" ,
+                "detail": "category_id: 3"
+              }
+            ]
+          }
+
+  - title: Создать новую заявку V3
+    api: post|api/ticket/create
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: TicketName
+              Type: "string"
+              Tag: 'json:"ticket_name" binding:"required,lte=300"'
+            - Name: InfoForCreate
+              Type: "json.RawMessage"
+              Tag: 'json:"info_for_create"'
+    do: CUSTOM|CreateTicketV2|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка создана"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ticket_id": 32,
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: название заявки содержит URL"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; ticket name must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка создания заявки"
+
+  - title: Создать новую заявку V4
+    description: "Cоздание новой заявки с возможностью прикрепления файлов, доступных для данной категории"
+    api: post|api/ticket/create_v2
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: TicketName
+              Type: "string"
+              Tag: 'json:"ticket_name" binding:"required,lte=300"'
+            - Name: Files
+              Type: "json.RawMessage"
+              Tag: 'json:"files"'
+            - Name: InfoForCreate
+              Type: "json.RawMessage"
+              Tag: 'json:"info_for_create"'
+    do: CUSTOM|CreateTicketV3|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка создана"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ticket_id": 32,
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: название заявки содержит URL"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; ticket name must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка создания заявки"
+
+  - title: Отклонить созданную заявку (и все вложенные) V2
+    api: post|api/tickets/reject
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: RejectTicket
+      schema:
+        - type_name: RejectTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=300"'
+    do: CUSTOM|RejectTicket|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+        data_example: |-
+          { "data": [
+              {
+                "ticket_id": [
+                  131,
+                  132,
+                  133,
+                  134
+                ]
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: комментарий отклонения содержит URL"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; rejected comments must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка отклонения заявки"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "tickets.notfound",
+                "detail": {"ticket_id": 200},
+                "message": "Отменяемая заявка не существует"
+              }
+            ]
+          }
+
+  - title: Отклонить созданную заявку (и все вложенные) V3
+    description: "Отклонение заявки с возможностью прикрепления файлов, доступных для данной категории"
+    api: post|api/tickets/reject_v2
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: RejectTicket
+      schema:
+        - type_name: RejectedFile
+          fields:
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+            - Name: FileType
+              Type: string
+              Tag: 'json:"file_type" binding:"required,min=1,max=100"'
+            - Name: FileSize
+              Type: int64
+              Tag: 'json:"file_size" binding:"required,gt=0"'
+            - Name: FileName
+              Type: string
+              Tag: 'json:"file_name" binding:"required,min=1,max=100"'
+        - type_name: RejectTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=300"'
+            - Name: RejectedFile
+              Type: RejectedFile
+              Tag: 'json:"rejected_file" binding:"omitempty,gt=0"'
+              IsSlice: true
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'
+    do: CUSTOM|RejectTicketV2|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+        data_example: |-
+          { "data": [
+              {
+                "ticket_id": [
+                  131,
+                  132,
+                  133,
+                  134
+                ]
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: комментарий отклонения содержит URL"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; rejected comments must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка отклонения заявки"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "tickets.notfound",
+                "detail": {"ticket_id": 200},
+                "message": "Отменяемая заявка не существует"
+              }
+            ]
+          }
+
+  - title: Получить необходимую информацию для заведения тикета по данной категории и статусу V3
+    api: post|api/categories/get_by_status
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: GetCategoryInfo
+      schema:
+        - type_name: GetCategoryInfo
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,gt=0,max=3"'
+    do: CUSTOM|GetCategoryInfoByIDV2|BODY
+    responses:
+      - code: 200
+        description: "Информация о категории"
+      - code: 422
+        description: "Ошибка получения информации"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "categorystatus.notfound",
+                "detail": "category_id: 6, status_id: ETA",
+                "message": "Категория с данным статусом не существует"
+              }
+            ]
+          }
+
+  - title: Получить иерархическое дерево категорий
+    api: get|api/categories/info
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetCategoriesTree|employee_id
+    responses:
+      - code: 200
+        description: "Дерево категорий"
+        data_example: |-
+          {
+            "data": [
+              {
+                "children": null,
+                "category_id": 2,
+                "category_name": "name2",
+                "parent_category_id": null
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": null,
+                        "category_id": 1,
+                        "category_name": "name1",
+                        "parent_category_id": 5
+                      },
+                      {
+                        "children": null,
+                        "category_id": 4,
+                        "category_name": "name4",
+                        "parent_category_id": 5
+                      }
+                    ],
+                    "category_id": 5,
+                    "category_name": "name5",
+                    "parent_category_id": 3
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": null,
+                        "category_id": 9,
+                        "category_name": "name9",
+                        "parent_category_id": 8
+                      }
+                    ],
+                    "category_id": 8,
+                    "category_name": "name8",
+                    "parent_category_id": 3
+                  }
+                ],
+                "category_id": 3,
+                "category_name": "name3",
+                "parent_category_id": null
+              }
+            ]
+          }
+
+  - title: Получить все заявки, которые создал сотрудник. Без информации по пройденным статусам и полям заявки.
+    api: get|api/tickets/created_by_employee
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetTicketsCreatedByEmployee|employee_id
+
+  - title: Получить все данные по заявке. Также удаляет заявку из таблицы непросмотренных для сотрудника.
+    api: post|api/tickets/get_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: TicketView
+      schema:
+        - type_name: TicketView
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Tab
+              Type: "string"
+              Tag: 'json:"tab" binding:"required,min=1,max=30"'
+    do: CUSTOM|GetTicket|BODY;employee_id
+
+  - title: Получить всю необходимую информацию по заявкам, которые человек может подтвердить/исполнить/взять в работу на исполнение.
+    api: get|api/tickets/get_for_work_v2
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetTicketsForWorkV2|employee_id
+
+  - title: Получение рабочих заявок с проверкой внешних и внутренних доступов
+    api: get|api/tickets/get_work_tickets
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetWorkTickets|employee_id
+    responses:
+      - code: 200
+        description: "Рабочие заявки для подтверждения и исполнения"
+      - code: 204
+        description: "У сотрудника нет доступов к заявкам"
+
+  - title: Получение детальной информации по заявке по её номеру с указанием типа действия
+    description: "Получение заявки по номеру заявки для дальнейшей работы в соответствии с переданным типом действия"
+    api: post|api/ticket/get_ticket_info_by_type_action
+    auth_type: basic+e
+    auth_actions:
+      - "action.adminPanelByTickets"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketInfoByTypeAction
+      schema:
+        - type_name: GetTicketInfoByTypeAction
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeAction
+              Type: "string"
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: CUSTOM|GetTicketInfoByTypeAction|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Получение детальной информации по заявке для раздела "Центр заявок"
+    description: "Получение детальной информации заявки по её id для раздела 'Центр заявок'"
+    api: post|api/ticket/get_ticket_info_for_center
+    auth_type: basic+e
+    auth_actions:
+      - "action.adminPanelByTickets"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketInfoForCenter
+      schema:
+        - type_name: GetTicketInfoForCenter
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeAction
+              Type: "string"
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: CUSTOM|GetTicketInfoForCenter|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ext": [
+                  {
+                    "value": {
+                      "id": 1005059,
+                      "name": "Alpha Test 1005059"
+                    },
+                    "order_id": 5,
+                    "data_name": "employee",
+                    "status_id": "CRT",
+                    "front_data_name": "Сотрудник получатель"
+                  }
+                ],
+                "ch_dt": "2026-01-16T17:39:42.495342",
+                "create_dt": "2026-01-16T17:38:49.11802",
+                "status_id": "EX1",
+                "ticket_id": 10514,
+                "lifestages": [
+                  {
+                    "order_id": 1,
+                    "status_id": "CRT",
+                    "description": "Заявка создана",
+                    "ch_dt_status": "2026-01-16T17:38:49.11802",
+                    "scenario_name": "ТСД",
+                    "autoapi_answer": null,
+                    "scenario_label": "Тип оборудования",
+                    "ch_employee_id_status": 1005059
+                  }
+                ],
+                "category_id": 281,
+                "ticket_name": "Название заявки",
+                "tickets_type": "active_tickets",
+                "category_name": "Тест. Обеспечение объекта. Замена сломанному оборудованию",
+                "ch_employee_id": 1005059,
+                "rejected_answer": null,
+                "rejected_comments": null,
+                "booked_employee_id": 1005059,
+                "create_employee_id": 1005059,
+                "status_description": "Исполнение на замену оборудования (ТСД)",
+                "approve_employee_id": 1005059,
+                "rejected_employee_id": null,
+                "completed_employee_id": null
+              }
+            ]
+          }
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Получения детальной информации по заявке
+    description: '"Получение детальной информации заявки по её id для раздела "Мои заявки" на вкладках "Активные", "Отклоненные", "Выполненные", "Наблюдаемые"'
+    api: post|api/ticket/get_ticket_info_for_my_tickets
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketInfo
+      schema:
+        - type_name: GetTicketInfo
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|GetTicketInfoForMyTickets|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+
+  - title: Получение информации по заявке с проверкой доступа к категории
+    description: "Получение информации по заявке с проверкой доступа к категории. Также используется для передачи ссылки на заявку"
+    api: post|api/ticket/get_ticket_for_link
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketForLink
+      schema:
+        - type_name: GetTicketForLink
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|GetTicketForLink|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Получение списка заявок для раздела "Мои заявки"
+    description: "Получение списка заявок для раздела 'Мои заявки'"
+    api: get|api/tickets/get_my_tickets
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetMyTickets|employee_id
+    responses:
+      - code: 200
+        description: "Список заявок сотрудника"
+      - code: 204
+        description: "У сотрудника нет заявок"
+
+  - title: Утвердить указанную заявку V2
+    api: post|api/tickets/approve_v2
+    auth_actions:
+      - "system.approve"
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: ApproveTicket
+      schema:
+        - type_name: ApproveTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+    do: CUSTOM|ApproveTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка подтверждена"
+
+  - title: Утвердить указанную заявку V3
+    description: Согласование заявки
+    api: post|api/tickets/approve_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+    do: CUSTOM|ApproveTicketV2|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка подтверждена"
+
+  - title: Утвердить указанную заявку  V3. Можно прикреплять файлы
+    description: Согласование заявки
+    api: post|api/tickets/approve_v3
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'
+            - Name: Files
+              Type: "json.RawMessage"
+              Tag: 'json:"files"'
+    do: CUSTOM|ApproveTicketV3|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка подтверждена"
+
+  - title: Исполнить указанную заявку
+    api: post|api/tickets/perform
+    auth_type: basic+e
+    auth_actions:
+      - "system.perform"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: PerformTicket
+      schema:
+        - type_name: PerformTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+    do: CUSTOM|PerformTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка исполнена"
+
+  - title: Исполнить указанную заявку V2
+    description: Исполнение заявки
+    api: post|api/tickets/perform_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+    do: CUSTOM|PerformTicketV2|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка исполнена"
+
+  - title: Исполнить указанную заявку V3. Можно прикреплять файлы
+    api: post|api/tickets/perform_v2
+    auth_type: basic+e
+    auth_actions:
+      - "system.perform"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: PerformTicket
+      schema:
+        - type_name: PerformTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'
+            - Name: Files
+              Type: "json.RawMessage"
+              Tag: 'json:"files"'
+    do: CUSTOM|PerformTicketV3|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка исполнена"
+
+  - title: Получение информации по статусам категории
+    api: post|api/categories/statuses_info
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: GetCategoryStatusesInfo
+      schema:
+        - type_name: GetCategoryStatusesInfo
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+    do: CUSTOM|GetCategoryStatusesInfo|BODY
+    responses:
+      - code: 200
+        description: "Информация о статусах категории"
+      - code: 422
+        description: "Ошибка получения информации"
+        data_example: |-
+          {
+              "errors": [
+                {
+                  "error": "category.notfound",
+                  "detail": "category_id: 15",
+                  "message": "Категория не существует или по категории нельзя создавать заявки."
+                }
+              ]
+          }
+
+  - title: Взять в работу указанную заявку (забронировать для исполнения)
+    api: post|api/tickets/book
+    auth_type: basic+e
+    auth_actions:
+      - "system.perform"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: BookTicket
+      schema:
+        - type_name: BookTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'   
+    do: CUSTOM|BookTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка взята в работу"
+
+  - title: Взять в работу указанную заявку V2
+    description: Взять в работу указанную заявку (забронировать для исполнения)
+    api: post|api/tickets/book_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: CUSTOM|BookTicketV2|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка взята в работу"
+
+  - title: Снять с себя указанную заявку (снять бронь на исполнение)
+    api: post|api/tickets/unbook
+    auth_type: basic+e
+    auth_actions:
+      - "system.perform"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: UnbookTicket
+      schema:
+        - type_name: UnbookTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'  
+    do: CUSTOM|UnbookTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "С заявки снята бронь на исполнение"
+
+  - title: Снять с себя заявку V2
+    api: post|api/tickets/unbook_ticket
+    description: Cнять с себя указанную заявку
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|UnbookTicketV2|BODY;employee_id
+    responses:
+      - code: 204
+        description: "С заявки снята бронь на исполнение"
+
+  - title: Редактирование статуса категории
+    api: post|api/categories/update_status
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: UpdateCategoryStatus
+      schema:
+        - type_name: ScenarioAddedInformationModel
+          fields:
+            - Name: DataName
+              Type: string
+              Tag: 'json:"data_name" binding:"required,lte=30"'
+            - Name: OrderID
+              Type: int64
+              Tag: 'json:"order_id" binding:"required"'
+            - Name: DataType
+              Type: string
+              Tag: 'json:"data_type" binding:"required,lte=15"'
+            - Name: FrontDataName
+              Type: string
+              Tag: 'json:"front_data_name" binding:"required,lte=100"'
+            - Name: IsRequired
+              Type: "*bool"
+              Tag: 'json:"is_required" binding:"required"'
+            - Name: FrontModel
+              Type: json.RawMessage
+              Tag: 'json:"front_model" binding:"required"'
+            - Name: IsHiddenForCreator
+              Type: "*bool"
+              Tag: 'json:"is_hidden_for_creator" binding:"required"'
+        - type_name: AddedInformationModel
+          fields:
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: ScenarioName
+              Type: string
+              Tag: 'json:"scenario_name" binding:"required,lte=100"'
+            - Name: NextStatusID
+              Type: string
+              Tag: 'json:"next_status_id" binding:"required,lte=3"'
+            - Name: ScenarioAddedInformationModel
+              Type: ScenarioAddedInformationModel
+              Tag: 'json:"scenario_added_information_model" binding:"required"'
+              IsSlice: true
+        - type_name: StatusInfo
+          fields:
+            - Name: IsMain
+              Type: "*bool"
+              Tag: 'json:"is_main" binding:"required"'
+            - Name: StatusID
+              Type: string
+              Tag: 'json:"status_id" binding:"required"'
+            - Name: ConstructorOrderID
+              Type: int64
+              Tag: 'json:"constructor_order_id" binding:"required"'
+            - Name: ApproveGroupID
+              Type: "*int64"
+              Tag: 'json:"approve_group_id" binding:"omitempty"'
+            - Name: PerformGroupID
+              Type: "*int64"
+              Tag: 'json:"perform_group_id" binding:"omitempty"'
+            - Name: HasPrereject
+              Type: "*bool"
+              Tag: 'json:"has_prereject" binding:"required"'
+            - Name: InformationModel
+              Type: json.RawMessage
+              Tag: 'json:"information_model" binding:"omitempty"'
+            - Name: ApproveGroupName
+              Type: "*string"
+              Tag: 'json:"approve_group_name" binding:"omitempty,lte=100"'
+            - Name: PerformGroupName
+              Type: "*string"
+              Tag: 'json:"perform_group_name" binding:"omitempty,lte=100"'
+            - Name: StatusDescription
+              Type: string
+              Tag: 'json:"status_description" binding:"required,lte=100"'
+            - Name: AutoAPI
+              Type: "*string"
+              Tag: 'json:"autoapi"'
+            - Name: ScenarioLabel
+              Type: "*string"
+              Tag: 'json:"scenario_label" binding:"omitempty,lte=100"'
+            - Name: WarningDescription
+              Type: "*string"
+              Tag: 'json:"warning_description" binding:"omitempty,lte=100"'
+            - Name: InfoDescription
+              Type: "*string"
+              Tag: 'json:"info_description" binding:"omitempty,lte=100"'
+            - Name: IsBlockedReject
+              Type: "*bool"
+              Tag: 'json:"is_blocked_reject" binding:"omitempty"'
+            - Name: ReturnStatusIDs
+              Type: "string"
+              Tag: 'json:"return_status_ids" binding:"omitempty,dive,min=1,max=3"'
+              IsSlice: true
+            - Name: IsBlockedStatus
+              Type: "*bool"
+              Tag: 'json:"is_blocked_status" binding:"omitempty"'
+            - Name: AddedInformationModel
+              Type: AddedInformationModel
+              Tag: 'json:"added_information_model" binding:"omitempty"'
+              IsSlice: true
+        - type_name: UpdateCategoryStatus
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required"'
+            - Name: StatusInfo
+              Type: StatusInfo
+              Tag: 'json:"status_info" binding:"required"'
+              IsSlice: true
+    do: CUSTOM|UpdateCategoryStatus|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Редактирование статуса категории успешно"
+        data_example: |-
+          {
+            "data": null 
+          }
+
+  - title: Создание категории
+    api: post|api/categories/add_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      custom_body_parser: true
+    do: CUSTOM|AddCategory|employee_id;RawBODY
+    responses:
+      - code: 204
+        description: "Создание категории успешно"
+
+  - title: Изменение или удаление категории
+    api: post|api/categories/update_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      custom_body_parser: true
+    do: CUSTOM|UpdateCategory|employee_id;RawBODY
+    responses:
+      - code: 204
+        description: "Изменение или удаление категории успешно"
+
+  - title: Обновление наблюдаемых заявок
+    description: "Добавляет/удаляет заявку из наблюдаемых. При условии need_notification = TRUE сотрудник получает уведомления обо всех переходах статусов заявки"
+    api: post|api/tickets/update_favourite
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: ChEmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required"'
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+            - Name: NeedNotification
+              Type: "*bool"
+              Tag: 'json:"need_notification" binding:"required"'
+            - Name: IsDel
+              Type: "*bool"
+              Tag: 'json:"is_del" binding:"required"'
+    do: CUSTOM|UpdateFavouriteTickets|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Обновление наблюдаемых заявок прошло успешно"
+
+  - title: Копирование категории заявки
+    description: "АПИ копирует категорию заявки на уровне базы"
+    api: post|api/categories/copy_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: ChEmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required"'
+            - Name: ParentCategoryID
+              Type: int64
+              Tag: 'json:"parent_category_id" binding:"required"'
+    do: CUSTOM|CopyCategoryTicket|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Копирование категории заявки прошло успешно"
+        data_example: |-
+          {
+            "data": {
+              "category_id": 2
+            }
+          }
+
+  - title: Получения наблюдаемых заявок V2
+    description: "Возвращает наблюдаемые заявки сотрудника V2"
+    api: get|api/tickets/favourite_by_employee_v2
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|TicketsFavouriteGetByEmployeeV2|employee_id
+
+  - title: Получение наблюдаемых заявок, в которых учавствовал сотрудник на уровне подтверждения или исполнения
+    api: get|api/tickets/favourite_by_employee_for_work_v2
+    auth_type: basic+e
+    auth_actions:
+      - "system.approve"
+      - "system.perform"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|TicketsFavouriteGetByEmployeeForWorkV2|employee_id
+
+  - title: Перенос настроек одной категории в другую
+    api: post|api/categories/copy_settings_category
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: SourceCategoryID
+              Type: int64
+              Tag: 'json:"source_category_id" binding:"required,gt=0"'
+            - Name: TargetCategoryID
+              Type: int64
+              Tag: 'json:"target_category_id" binding:"required,gt=0"'
+    do: CUSTOM|CopyCategorySettings|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Копирование настроек категории прошло успешно"
+        data_example: |-
+          {
+            "data": {
+              "target_category_id": 156
+            }
+          }
+
+  - title: Перенос категории
+    description: "Перенести активную категорию в другую родительскую папку"
+    api: post|api/categories/category_move
+    auth_type: basic+e
+    auth_actions:
+      - "action.categoryConstructor"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ParentCategoryID
+              Type: int64
+              Tag: 'json:"parent_category_id" binding:"required,gt=0"'
+    do: CUSTOM|MoveCategory|BODY;employee_id
+    responses:
+      - code: 200
+        data_example: |-
+          {
+            "data": {
+              "category_id": 92
+            }
+          }
+
+  - title: Получение заявок по ids категорий
+    description: "Получить заявки по ids категорий"
+    api: post|api/admin/get_tickets_by_category_ids
+    auth_type: basic+e
+    auth_actions:
+      - "action.adminPanelByTickets"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketsByCategoryIDs
+      schema:
+        - type_name: GetTicketsByCategoryIDs
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required"'
+            - Name: CategoryIDs
+              Type: int64
+              IsSlice: true
+              Tag: 'json:"category_ids" binding:"required,gt=0"'
+    do: CUSTOM|GetTicketsByCategoryIDs|BODY;employee_id
+    responses:
+      - code: 200
+        data_example: |-
+          {
+            "data": {
+              "category_id": 92
+            }
+          }
+
+  - title: Получение списка заявок для центра
+    description: "Получение списка заявок для центра по ids категорий"
+    api: post|api/admin/get_center_tickets
+    auth_type: basic+e
+    auth_actions:
+      - "action.adminPanelByTickets"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetCenterTickets
+      schema:
+        - type_name: GetCenterTickets
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required"'
+            - Name: CategoryIDs
+              Type: int64
+              IsSlice: true
+              Tag: 'json:"category_ids" binding:"required,min=1,max=5"'
+    do: CUSTOM|GetCenterTickets|BODY;employee_id
+    responses:
+      - code: 200
+        data_example: |-
+          {
+            "data": [{
+              "ch_dt": "2026-01-23T17:40:48.302336",
+              "create_dt": "2026-01-23T17:40:40.175963",
+              "status_id": "EXE",
+              "ticket_id": 10531,
+              "category_id": 329,
+              "ticket_name": "4ке454",
+              "ticket_type": "forbooking",
+              "category_name": "Тест. 1111111 (Копия)",
+              "category_color": null,
+              "ch_employee_id": 1005059,
+              "rejected_answer": null,
+              "rejected_comments": null,
+              "booked_employee_id": null,
+              "create_employee_id": 1005059,
+              "status_description": "Перформ",
+              "approve_employee_id": 1005059,
+              "rejected_employee_id": null,
+              "completed_employee_id": null
+            }, {
+              "ch_dt": "2026-01-23T17:39:44.567702",
+              "create_dt": "2026-01-23T17:39:44.567702",
+              "status_id": "APV",
+              "ticket_id": 10530,
+              "category_id": 329,
+              "ticket_name": "вававава",
+              "ticket_type": "forapprove",
+              "category_name": "Тест. 1111111 (Копия)",
+              "category_color": null,
+              "ch_employee_id": 1005059,
+              "rejected_answer": null,
+              "rejected_comments": null,
+              "booked_employee_id": null,
+              "create_employee_id": 1005059,
+              "status_description": "Аппрув",
+              "approve_employee_id": null,
+              "rejected_employee_id": null,
+              "completed_employee_id": null
+            }]
+          }
+
+  - title: Получение массива ID тикетов
+    description: 'Получение массива ID тикетов для селектора центра заявок'
+    api: get|api/admin/get_center_ticket_ids
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetCenterTicketIDs|employee_id
+    responses:
+      - code: 200
+        description: "Массив тикетов"
+        data_example: |-
+          {
+            "data": [
+                {
+                  "ticket_id": 123
+                }, 
+                {
+                  "ticket_id": 10530
+                }
+            ]
+          }
+
+  - title: Получение тикетов по массиву ID
+    description: 'Получение тикетов для центра заявок по массиву ID тикетов'
+    api: post|api/admin/get_center_ticket_by_ticket_ids
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetCenterTicketByTicketIDs
+      schema:
+        - type_name: GetCenterTicketByTicketIDs
+          fields:
+            - Name: TicketIDs
+              Type: int64
+              Tag: 'json:"ticket_ids" binding:"required,gt=0,lte=100,dive,gt=0"'
+              IsSlice: true
+    do: CUSTOM|GetCenterTicketByTicketIDs|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Массив тикетов"
+        data_example: |-
+          {
+              "data": [{
+                      "ch_dt": "2026-01-23T17:40:48.302336",
+                      "create_dt": "2026-01-23T17:40:40.175963",
+                      "status_id": "EXE",
+                      "ticket_id": 10531,
+                      "category_id": 329,
+                      "ticket_name": "4ке454",
+                      "ticket_type": "forbooking",
+                      "category_name": "Тест. 1111111 (Копия)",
+                      "category_color": null,
+                      "ch_employee_id": 1005059,
+                      "rejected_answer": null,
+                      "rejected_comments": null,
+                      "booked_employee_id": null,
+                      "create_employee_id": 1005059,
+                      "status_description": "Перформ",
+                      "approve_employee_id": 1005059,
+                      "rejected_employee_id": null,
+                      "completed_employee_id": null,
+                      "rejected_comments_loc": null,
+                      "rejected_answer_loc": null,
+                      "chat_id": "dlddfae4545",
+                      "is_prereject": false,
+                      "has_prereject": true,
+                      "rejected_file": null
+                  }, {
+                      "ch_dt": "2026-01-23T17:39:44.567702",
+                      "create_dt": "2026-01-23T17:39:44.567702",
+                      "status_id": "APV",
+                      "ticket_id": 10530,
+                      "category_id": 329,
+                      "ticket_name": "вававава",
+                      "ticket_type": "forapprove",
+                      "category_name": "Тест. 1111111 (Копия)",
+                      "category_color": null,
+                      "ch_employee_id": 1005059,
+                      "rejected_answer": null,
+                      "rejected_comments": null,
+                      "booked_employee_id": null,
+                      "create_employee_id": 1005059,
+                      "status_description": "Аппрув",
+                      "approve_employee_id": null,
+                      "rejected_employee_id": null,
+                      "completed_employee_id": null,
+                      "rejected_comments_loc": null,
+                      "rejected_answer_loc": null,
+                      "chat_id": "dlddfae4545",
+                      "is_prereject": false,
+                      "has_prereject": true,
+                      "rejected_file": null
+                  }
+              ]
+          }
+
+  - title: Поделиться заявкой
+    description: 'Поделиться моей заявкой для раздела "Мои заявки"'
+    api: post|api/ticket/share_my_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: ShareMyTicket
+      schema:
+        - type_name: ShareMyTicket
+          fields:
+            - Name: RecipientEmployeeID
+              Type: int64
+              Tag: 'json:"recipient_employee_id" binding:"required,EmployeeID"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|ShareMyTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Пользователь добавлен в наблюдатели"
+
+  - title: Поделиться рабочей заявкой
+    description: 'Поделиться рабочей заявкой для раздела "Рабочие заявки"'
+    api: post|api/ticket/share_work_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: ShareWorkTicket
+      schema:
+        - type_name: ShareWorkTicket
+          fields:
+            - Name: RecipientEmployeeID
+              Type: int64
+              Tag: 'json:"recipient_employee_id" binding:"required,EmployeeID"'
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,oneof=status_approve_category status_perform_category"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: CUSTOM|ShareWorkTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Пользователь добавлен в наблюдатели"
+
+  - title: Удалить заявку из наблюдения
+    description: 'Удаление заявки из наблюдения для раздела "Мои заявки"'
+    api: post|api/ticket/delete_ticket_from_observables
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: DeleteTicketFromObservables
+      schema:
+        - type_name: DeleteTicketFromObservables
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|DeleteTicketFromObservables|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка удалена из наблюдения"
+
+  - title: Отклонение заявки для раздела "Мои заявки" и для раздела "Рабочие заявки" на вкладке "В работе"
+    api: post|api/tickets/reject_my_ticket_or_ticket_at_perform
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: RejectMyTicketOrTicketAtPerform
+      schema:
+        - type_name: RejectMyTicketOrTicketAtPerform
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=400"'
+    do: CUSTOM|RejectMyTicketOrTicketAtPerform|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ticket_id": 10574
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: комментарий отклонения содержит URL"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; rejected comments must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка отклонения заявки"
+
+  - title: Отклонение заявки для раздела "Рабочие заявки" на вкладках "На согласовании" и "Готово к исполнению"
+    api: post|api/tickets/reject_ticket_at_approve_or_book
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: RejectTicketAtApproveOrBook
+      schema:
+        - type_name: RejectTicketAtApproveOrBook
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,oneof=status_approve_category status_perform_category"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=400"'
+    do: CUSTOM|RejectTicketAtApproveOrBook|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ticket_id": 10574
+              }
+            ]
+          }
+      - code: 400
+        description: "Ошибка валидации: комментарий отклонения содержит URL или нет доступа к заявке"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "std.std.err_vld.request.body.wrong",
+                "message": "Incorrect request format.",
+                "detail": "ID:a61cfb10-0f9e-4348-5d72-e0648190e7cd; rejected comments must not contain URLs, 'https://example.com'"
+              }
+            ]
+          }
+      - code: 422
+        description: "Ошибка отклонения заявки"
+
+  - title: Запрос на отклонение заявки
+    api: post|api/tickets/request_to_reject_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: RequestToRejectTicket
+      schema:
+        - type_name: RequestToRejectTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=400"'
+    do: CUSTOM|RequestToRejectTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Отмена заявки запрошена"
+      - code: 400
+        description: "Ошибка валидации: комментарий отклонения содержит URL или нет доступа к заявке"
+      - code: 422
+        description: "Ошибка запроса на отклонение заявки"
+
+  - title: Запрос presigned URL на загрузку файла к заявке
+    api: post|api/files/get_upload_link
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: FileGetUploadLinkBody
+      schema:
+        - type_name: FileGetUploadLinkBody
+          fields:
+            - Name: MimeType
+              Type: "string"
+              Tag: 'json:"mime_type" binding:"required,min=1,max=150"'
+            - Name: FileSize
+              Type: int64
+              Tag: 'json:"file_size" binding:"required,gt=0"'
+            - Name: FileName
+              Type: "string"
+              Tag: 'json:"file_name" binding:"required,min=1,max=100"'
+    do: CUSTOM|GetUploadFileLink|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Данные для загрузки файла"
+        data_example: |-
+          {
+            "data": {
+              "upload_id": 177,
+              "file_id": 181,
+              "upload_url": "https://s3-basket-hot.wb.ru",
+              "method": "POST",
+              "expires_at": "2026-05-28T10:33:45.526045",
+              "required_form_fields": {
+                "bucket": "support-alpha-files-tmp",
+                "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+                "X-Amz-Date": "20260528T072845Z",
+                "X-Amz-Credential": "BA...",
+                "X-Amz-Signature": "b8a4bd57f3c22...",
+                "key": "tmp/96/da/177",
+                "policy": "eyJjb2..."
+              }
+            }
+          }
+
+  - title: Подтверждение загрузки файла
+    api: post|api/files/complete_upload
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: FileCompleteUploadBody
+      schema:
+        - type_name: FileCompleteUploadBody
+          fields:
+            - Name: UploadID
+              Type: int64
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|CompleteFileUpload|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Загрузка подтверждена"
+
+  - title: Ссылка на скачивание файла заявки
+    api: post|api/files/download_url
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: FileDownloadURLBody
+      schema:
+        - type_name: FileDownloadURLBody
+          fields:
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|GetFileDownloadURL|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Ссылка на скачивание"
+        data_example: |-
+          {
+            "data": {
+              "file_id": 67890,
+              "download_url": "https://s3/...?X-Amz-...",
+              "file_name": "document.pdf",
+              "expires_at": "2026-03-31T19:35:00+03:00"
+            }
+          }
+
+  - title: Отмена загрузки файла
+    api: post|api/files/cancel_upload
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: FileCancelUploadBody
+      schema:
+        - type_name: FileCancelUploadBody
+          fields:
+            - Name: UploadID
+              Type: int64
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|CancelFileUpload|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Загрузка отменена"
+
+  - title: Обновление значения полей заявки
+    api: post|api/tickets/ticket_ext_update
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: UpdateTicketExt
+      schema:
+        - type_name: UpdateTicketExt
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+    do: CUSTOM|UpdateTicketExt|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка отредактирована"
+
+  - title: Получение информации о поле заявки по категории и статусу
+    api: post|api/tickets/get_ticket_field_info_by_category_status
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketFieldInfoByCategoryStatus
+      schema:
+        - type_name: GetTicketFieldInfoByCategoryStatus
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+            - Name: DataName
+              Type: string
+              Tag: 'json:"data_name" binding:"required,lte=30"'
+    do: CUSTOM|GetTicketFieldInfoByCategoryStatus|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Информация о поле заявки по категории и статусу"
+        data_example: |-
+          {
+            "data": [{
+                    "status_id": "CRT",
+                    "category_id": 185,
+                    "category_name": "Тест. Тестовая категория для разных тестов",
+                    "scenario_label": null,
+                    "approve_group_id": null,
+                    "info_description": null,
+                    "perform_group_id": null,
+                    "approve_group_name": null,
+                    "perform_group_name": null,
+                    "status_description": "Заявка создана",
+                    "warning_description": null,
+                    "has_prereject": true,
+                    "added_information_model": [{
+                            "scenario_name": "Сценарий 1",
+                            "scenario_order_id": 0,
+                            "scenario_added_information_model": [{
+                                    "api": "srv/front_wbstorenv_warehouse_info_api_proxy_adapter/api/offices/get_all",
+                                    "order_id": 1,
+                                    "data_name": "office_id",
+                                    "is_required": true,
+                                    "res_aliases": {
+                                        "id": "office_id",
+                                        "name": "office_name",
+                                        "time_zone": "time_zone"
+                                    },
+                                    "front_data_name": "Офис",
+                                    "front_data_type": "selector",
+                                    "is_hidden_for_creator": false,
+                                    "front_data_description": "Выберите офис из списка"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+          }
+
+  - title: API для возвращения заявки на предыдущий статус
+    api: post|api/tickets/return_ticket_status
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: ReturnTicketStatus
+      schema:
+        - type_name: ReturnTicketStatus
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ReturnStatusID
+              Type: "string"
+              Tag: 'json:"return_status_id" binding:"required,min=1,max=3"'
+            - Name: ReturnComment
+              Type: string
+              Tag: 'json:"return_comment" binding:"required,max=500"'
+    do: CUSTOM|ReturnTicketStatus|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Заявка возвращена на предыдущий статус"
+
+  - title: Проверка доступности заявки для пользователя по подтабу
+    api: post|api/ticket/check_access_for_subtab
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: CheckTicketAccessForSubTab
+      schema:
+        - type_name: CheckTicketAccessForSubTab
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Subtab
+              Type: string
+              Tag: 'json:"subtab" binding:"required,min=1,max=50"'
+    do: CUSTOM|CheckTicketAccessForSubTab|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Результат проверки доступа"
+      - code: 400
+        description: "Некорректный subtab или body"
+
+  - title: Получение всех доступных категорий и статусов для раздела "Мои заявки"
+    api: get|api/categories/get_category_statuses_for_my_tickets
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetCategoryStatusesForMyTickets|employee_id
+    responses:
+      - code: 200
+        description: "Список категорий и статусов"
+      - code: 204
+        description: "Нет данных"
+
+  - title: Получение всех доступных категорий и статусов для раздела "Рабочие заявки"
+    api: get|api/categories/get_category_statuses_for_work_tickets
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetCategoryStatusesForWorkTickets|employee_id
+    responses:
+      - code: 200
+        description: "Список категорий и статусов"
+      - code: 204
+        description: "Нет данных"
+
+  - title: Получение заявок по списку ticket_ids и subtab
+    api: post|api/tickets/get_tickets_by_ids
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetTicketsByIDs
+      schema:
+        - type_name: GetTicketsByIDs
+          fields:
+            - Name: TicketIDs
+              Type: int64
+              Tag: 'json:"ticket_ids" binding:"required,min=1,dive,gt=0"'
+              isSlice: true
+            - Name: Subtab
+              Type: string
+              Tag: 'json:"subtab" binding:"required,min=1,max=50"'
+    do: CUSTOM|GetTicketsByIDs|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Список заявок"
+      - code: 204
+        description: "Нет данных"
+      - code: 400
+        description: "Некорректный subtab или параметры"

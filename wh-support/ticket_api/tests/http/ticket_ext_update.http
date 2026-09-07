@@ -1,0 +1,15 @@
+### Обновить поля заявки
+POST {{host}}/api/tickets/ticket_ext_update?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_id": 123,
+  "ext": {
+    "office_id": {
+      "id": 318388,
+      "name": "Адыгея"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "GetSprutNames": "api/wh.sprutenv.sprut_names.get/v001",
+    "CheckExistSprutOffice": "api/wh.sprutenv.sprut_office.exists/v001"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "3s",
+  "retry_count": 2
+}

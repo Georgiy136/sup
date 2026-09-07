@@ -1,0 +1,20 @@
+{
+  "urls": [
+    "http://localhost:8083"
+  ],
+  "apis": {
+    "WhBuildingsAdministrationGet": "api/wh.buildings.administration.get/v001"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2,
+  "auth_for_apis": {
+    "WhBuildingsAdministrationGet": {
+      "type": "basic",
+      "basic_login": "admin",
+      "basic_password": "test",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+}

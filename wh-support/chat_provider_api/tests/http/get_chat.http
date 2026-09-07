@@ -1,0 +1,26 @@
+### 200 Получение чата
+POST {{host}}/api/chat/get_chat
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "jctyqjwbaty58dpqcuffw5boqe"
+}
+
+### 400 Получение чата
+POST {{host}}/api/chat/get_chat
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "ph8mnz11ipnsd8phxiqcdma4uy111"
+}
+
+### 422 Чат не найден
+POST {{host}}/api/chat/get_chat
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "chat_id": "ph8mnz11ipnsd8phxiqcdma7uy"
+}

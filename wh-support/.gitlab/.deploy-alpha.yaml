@@ -1,0 +1,302 @@
+variables:
+  SERVER_GROUP: wh-px-support-alpha
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  DOCKER_AUTH_CONFIG: '{"auths":{"$DOCKER_REGISTRY":{"auth":"$DOCKER_AUTH"}}}'
+
+.trigger-deploy:
+  stage: call_trigger
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+      changes:
+        - "${PROJECT_PATH}/**/*"
+    - when: never
+  trigger:
+    project: ${PROJECT_URL}
+
+FileValidationCron deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: file_validation_cron
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/cron_01/FileValidationCron.yml
+
+TicketApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: ticket_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/TicketApi.yml
+
+BandNotificationsBot deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: band_notifications_bot
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/bot_01/BandNotificationsBot.yml
+
+TicketApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/ticket_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/TicketApiProxyAdapter.yml
+
+PersonalAccountApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: personal_account_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/PersonalAccountApi.yml
+
+PersonalAccountApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/personal_account_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/PersonalAccountApiProxyAdapter.yml
+
+FrontResourcesEmployeeAccessProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_resources_employee_access_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontResourcesEmployeeAccessProxyAdapter.yml
+
+FrontWbstorenvWarehouseInfoApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_wbstorenv_warehouse_info_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontWbstorenvWarehouseInfoApiProxyAdapter.yml
+
+ResourcesCacheCron deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: resources_cache_cron
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/cron_01/ResourcesCacheCron.yml
+
+ResourcesEmployeeAccess deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: resources_employee_access
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/ResourcesEmployeeAccess.yml
+
+EmployeeAccessService deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: employee_access
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/auth_01/EmployeeAccess.yml
+
+StatisticsApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: statistics_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/StatisticsApi.yml
+
+EmployeeGroupApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: employee_group_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/EmployeeGroupApi.yml
+
+FrontEmployeeGroupApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_employee_group_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontEmployeeGroupApiProxyAdapter.yml
+
+FrontStatisticsApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_statistics_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontStatisticsApiProxyAdapter.yml
+
+FrontEmployeeInfoApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_employee_info_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontEmployeeInfoApiProxyAdapter.yml
+
+FrontMapsApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_maps_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontMapsApiProxyAdapter.yml
+
+TicketApproveCron deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: ticket_approve_cron
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/cron_01/TicketApproveCron.yml
+
+TelegramApproveBot deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: telegram_approve_bot
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/bot_01/TelegramApproveBot.yml
+
+CategoriesApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: categories_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/CategoriesApi.yml
+
+FrontCategoriesApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_categories_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontCategoriesApiProxyAdapter.yml
+
+MapsApiAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/maps_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/MapsApiAdapter.yml
+
+WbstorenvPlaceInfoApiAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/wbstorenv_place_info_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/WbstorenvPlaceInfoApiAdapter.yml
+
+WbstorenvWarehouseInfoApiAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/wbstorenv_warehouse_info_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/WbstorenvWarehouseInfoApiAdapter.yml
+
+WhStorenvOfficesApiAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/wh_storenv_offices_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/WhStorenvOfficesApiAdapter.yml
+
+SupplierApiAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/supplier_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/SupplierApiAdapter.yml
+
+WbstorenvApiAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/wbstorenv_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/WbstorenvApiAdapter.yml
+
+ExternalMobileControlPAAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/external_mobile_control_pa_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/ExternalMobileControlPAAdapter.yml
+
+FrontWbstorenvPlaceInfoApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_wbstorenv_place_info_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontWbstorenvPlaceInfoApiProxyAdapter.yml
+
+FrontWhStorenvOfficesApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_wh_storenv_offices_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontWhStorenvOfficesApiProxyAdapter.yml
+
+FrontSupplierApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_supplier_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontSupplierApiProxyAdapter.yml
+
+FrontWbstorenvApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_wbstorenv_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontWbstorenvApiProxyAdapter.yml
+
+FrontExternalMobileControlPAProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_external_mobile_control_pa_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontExternalMobileControlPAProxyAdapter.yml
+
+OauthPasswordAdapterApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: api_adapters/oauth_password_adapter_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/adapter_01/OauthPasswordAdapterApi.yml
+
+ChatAuthService deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: chat_auth_service
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/auth_01/ChatAuthService.yml
+
+ChatAuthServiceProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_chat_auth_service_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontChatAuthServiceProxyAdapter.yml
+
+SupportFileManagerApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: support_file_manager_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/SupportFileManagerApi.yml
+
+ChatProviderApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: chat_provider_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/ChatProviderApi.yml
+
+ChatApi deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: chat_api
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_main_01/ChatApi.yml
+
+FrontChatApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/front_chat_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/FrontChatApiProxyAdapter.yml
+
+ChatProviderApiProxyAdapter deploy alpha:
+  extends: .trigger-deploy
+  variables:
+    PROJECT_PATH: proxy_adapters/chat_provider_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure-alpha
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support-alpha/api_proxy_01/ChatProviderApiProxyAdapter.yml

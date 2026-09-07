@@ -1,0 +1,7 @@
+{
+  "auto_status_cron": {
+    "cron_time_sleep_on_error": "1s",
+    "cron_time_sleep_on_ok": "1s",
+    "cron_time_sleep_on_no_data": "1s"
+  }
+}

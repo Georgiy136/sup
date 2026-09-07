@@ -1,0 +1,4 @@
+### Получение статистики по заявкам
+GET {{host}}/api/statistics/get_ticket_statistics?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json

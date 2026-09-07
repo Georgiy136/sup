@@ -1,0 +1,19 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "get_sticker_prefixes": "api/storage_place/sticker/prefixes",
+    "check_storage_place_type": "api/storage_place/type/check",
+    "get_names_of_storage_place_types": "api/storage_place_types/get_names"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

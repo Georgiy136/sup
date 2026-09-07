@@ -1,0 +1,36 @@
+### Проверка того, что выбранное строение не существует (тест 422 ошибки с русским языком)
+POST {{host}}/api/buildings/check/building_not_exists?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+X-WBWH-Language:
+
+{
+  "office_id": 1,
+  "value": "A1"
+}
+
+### Проверка того, что выбранное строение не существует (тест 422 ошибки с английским языком)
+POST {{host}}/api/buildings/check/building_not_exists?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+X-WBWH-Language: en
+
+{
+  "office_id": 1,
+  "value": "A1"
+}
+
+### Получение селектора партов на этаже (тест 422 ошибки с русским языком)
+POST {{host}}/api/stages/get_selector_parts_on_stage?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+X-WBWH-Language:
+
+{
+  "office_id": 1,
+  "wh_id": 1,
+  "stage": 1
+}

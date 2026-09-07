@@ -1,0 +1,70 @@
+module gitlab.wildberries.ru/wbwh/support/backend/wh-support.git/publisher_from_wh_support
+
+go 1.26.6
+
+require (
+	github.com/gogo/protobuf v1.3.2
+	github.com/json-iterator/go v1.1.12
+	gitlab.wildberries.ru/wbwh/wh-core/gocore_database.git v1.2.7
+	gitlab.wildberries.ru/wbwh/wh-core/gocore_service_configs.git v1.2.8
+	gitlab.wildberries.ru/wbwh/wh-core/gocore_service_core.git v1.6.25
+	gitlab.wildberries.ru/wbwh/wh-core/jetstream/sync_core.git v0.2.38
+)
+
+require (
+	github.com/alta/protopatch v0.5.3 // indirect
+	github.com/andybalholm/brotli v1.2.3 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
+	github.com/caarlos0/env v3.5.0+incompatible // indirect
+	github.com/fatih/color v1.19.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.30.3 // indirect
+	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/hashicorp/consul/api v1.34.4 // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+	github.com/hashicorp/go-hclog v1.6.3 // indirect
+	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
+	github.com/hashicorp/go-metrics v0.6.1 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
+	github.com/hashicorp/golang-lru v1.0.2 // indirect
+	github.com/hashicorp/serf v0.10.4 // indirect
+	github.com/jackc/pgerrcode v0.0.0-20250907135507-afb5586c32a6 // indirect
+	github.com/jackc/pgio v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/pgtype v1.14.4 // indirect
+	github.com/jackc/pgx/v5 v5.10.0 // indirect
+	github.com/jackc/puddle/v2 v2.2.2 // indirect
+	github.com/klauspost/compress v1.19.2 // indirect
+	github.com/leodido/go-urn v1.5.0 // indirect
+	github.com/mattn/go-colorable v0.1.15 // indirect
+	github.com/mattn/go-isatty v0.0.24 // indirect
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/nats-io/nats.go v1.53.1 // indirect
+	github.com/nats-io/nkeys v0.4.16 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
+	github.com/rs/dnscache v0.0.0-20230804202142-fc85eb664529 // indirect
+	github.com/sirupsen/logrus v1.10.2 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasthttp v1.73.0 // indirect
+	gitlab.wildberries.ru/wbwh/light/backend/models.git v0.0.20 // indirect
+	gitlab.wildberries.ru/wbwh/light/client.git v0.2.3 // indirect
+	gitlab.wildberries.ru/wbwh/wh-core/core_hub.git v1.1.1 // indirect
+	gitlab.wildberries.ru/wbwh/wh-core/gocore_service_const.git v1.4.1 // indirect
+	gitlab.wildberries.ru/wbwh/wh-core/gocore_utils.git v1.1.28 // indirect
+	go.uber.org/automaxprocs v1.6.0 // indirect
+	golang.org/x/crypto v0.55.0 // indirect
+	golang.org/x/exp v0.0.0-20260824195058-e88cd73687aa // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
+	google.golang.org/protobuf v1.36.12 // indirect
+)

@@ -1,0 +1,18 @@
+{
+  "urls": [
+    "http://wh-maps-hard-01.nb.wb.ru/srv/maps_api",
+    "http://wh-maps-hard-02.xs.wb.ru/srv/maps_api",
+    "http://wh-maps-hard-03.dm.wb.ru/srv/maps_api"
+  ],
+  "apis": {
+    "get_offices": "/v1/offices",
+    "get_spruts": "/v1/spruts"
+  },
+  "auth": {
+    "type": "without",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "7s"
+}

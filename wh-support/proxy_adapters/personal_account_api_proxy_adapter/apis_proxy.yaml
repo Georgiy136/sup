@@ -1,0 +1,59 @@
+title: Personal Account Api Proxy Adapter
+description: Прокси адаптер для личного кабинета пользователя
+
+httpApis:
+  - title: Получить информацию для личного кабинета пользователя V2
+    api: get|api/user/get_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: personal_account_api_client
+    responses:
+      - code: 200
+        description: "Информация о пользователе получена"
+        data_example: |-
+          {
+            "surname": "Пупкин",
+            "name": "Вова",
+            "patronymic": "Сергеевич",
+            "employee_id": 123,
+            "photo": "base64==" // Base64 PNG фото
+          }
+      - code: 422
+        description: "Ошибка получения информации о пользователе"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "internal.service_error",
+                "message": "internal service error",
+                "detail": "Error: the service is unavailable"
+              }
+            ]
+          }
+
+  - title: Получить список групп доступов пользователя
+    api: get|api/user/get_groups
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: personal_account_api_client
+    responses:
+      - code: 200
+        description: "Информация о группах пользователя получена"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_ids": [
+                  {
+                    "group_id": 1,
+                    "group_name": "Подтверждение заявок по созданию офиса"
+                  },
+                  {
+                    "group_id": 2,
+                    "group_name": "Исполнение заявок по добавлению офиса на спрут"
+                  }
+                ],
+                "employee_id": 2
+              }
+            ]
+          }

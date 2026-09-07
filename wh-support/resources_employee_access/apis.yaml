@@ -1,0 +1,382 @@
+title: Resources Employee Access
+description: Сервис ресурсов wh-support
+
+### Ошибки
+Общие для всех API коды ошибок:
+  - code: 400
+    description: api validation error
+  - code: 401
+    description: ошибка авторизации
+  - code: 500
+    description: internal service error
+  - code: 422
+    description: business-logic error
+
+Все ошибки возвращаются в формате: |-
+  {
+    "errors": [
+      {
+        "error": "some_error_code",
+        "message": "error message",
+        "detail": "some error details"
+      }
+    ]
+  }
+
+httpApis:
+  - title: Получение списка ресурсов, доступных сотруднику (по токену авторизации).
+    description: "Возвращает список ресурсов, доступных сотруднику"
+    api: get|api/resources_by_employee_id
+    auth_type: basic+e
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetResources|employee_id
+    responses:
+      - code: 200
+        description: список ресурсов, доступных сортуднику
+        data_example: |-
+          {
+              "data": {
+                "action_ids": [
+                  "system.approve",
+                  "system.perform"
+                ]
+              }
+          }
+      - code: 204
+        description: no data
+
+  - title: Получение списка всех action_ids.
+    description: "Возвращает список всех action_ids"
+    api: get|api/get_all_actions
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+      - "action.categoryConstructor"
+    do: CUSTOM|GetAllActions
+    responses:
+      - code: 200
+        description: список ресурсов, доступных сотруднику
+        data_example: |-
+          {
+            "data": [
+              {
+                "action_id": "action.approve",
+                "action_desc": "Пользователь является подтверждающим"
+              },
+              {
+                "action_id": "action.perform",
+                "action_desc": "Пользователь является исполнителем"
+              }
+            ]
+          }
+
+  - title: Получение списка всех action_ids V2
+    description: "Возвращает список всех action_ids"
+    api: get|api/actions/get_all
+    auth_type: basic+e
+    do: CUSTOM|GetAllActions
+    responses:
+      - code: 200
+        description: список ресурсов, доступных сотруднику
+        data_example: |-
+          {
+            "data": [
+              {
+                "action_id": "action.approve",
+                "action_desc": "Пользователь является подтверждающим"
+              },
+              {
+                "action_id": "action.perform",
+                "action_desc": "Пользователь является исполнителем"
+              }
+            ]
+          }
+
+  - title: Создание ресурса
+    description: "Создание нового права для пользователей"
+    api: post|api/create_action
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: CreateAction
+      schema:
+        - type_name: CreateAction
+          fields:
+            - Name: ActionID
+              Type: string
+              Tag: 'json:"action_id" binding:"required,max=50"'
+            - Name: ActionDesc
+              Type: string
+              Tag: 'json:"action_desc" binding:"required,max=200"'
+    do: CUSTOM|CreateAction|BODY;employee_id
+    responses:
+      - code: 204
+        description: успешно создано новое право пользователя
+
+  - title: Создание ресурса V2
+    description: "Создание нового права для пользователей"
+    api: post|api/actions/create
+    auth_type: basic+e
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: CreateAction
+      schema:
+        - type_name: CreateAction
+          fields:
+            - Name: ActionID
+              Type: string
+              Tag: 'json:"action_id" binding:"required,max=50"'
+            - Name: ActionDesc
+              Type: string
+              Tag: 'json:"action_desc" binding:"required,max=200"'
+    do: CUSTOM|CreateAction|BODY;employee_id
+    responses:
+      - code: 204
+        description: успешно создано новое право пользователя
+
+  - title: Изменение ресурса для пользователя (добавить, удалить)
+    description: "Изменяет указанное право пользователя"
+    api: post|api/update_action
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: UpdateAction
+      schema:
+        - type_name: UpdateAction
+          fields:
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+            - Name: ActionID
+              Type: string
+              Tag: 'json:"action_id" binding:"required,max=50"'
+            - Name: IsDel
+              Type: "*bool"
+              Tag: 'json:"is_del" binding:"omitempty"'
+    do: CUSTOM|UpdateAction|BODY;employee_id
+    responses:
+      - code: 204
+        description: успешно изменено указанное право пользователя
+
+  - title: Изменение ресурса для пользователя (добавить, удалить) V2
+    description: "Изменяет указанное право пользователя"
+    api: post|api/actions/update_for_employee
+    auth_type: basic+e
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: UpdateAction
+      schema:
+        - type_name: UpdateAction
+          fields:
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+            - Name: ActionID
+              Type: string
+              Tag: 'json:"action_id" binding:"required,max=50"'
+            - Name: IsDel
+              Type: "*bool"
+              Tag: 'json:"is_del" binding:"omitempty"'
+    do: CUSTOM|UpdateAction|BODY;employee_id
+    responses:
+      - code: 204
+        description: успешно изменено указанное право пользователя
+
+  - title: Удаление ресурса
+    description: "Удаляет указанное право из системы и для всех сотрудников"
+    api: get|api/delete_action
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+        - Name: ActionID
+          Type: string
+          Tag: uri:"action_id" binding:"required,max=50"
+    do: CUSTOM|DeleteAction|action_id;employee_id
+    responses:
+      - code: 204
+        description: успешно удалено указанное право
+
+  - title: Получение всех сотрудников по определенному праву
+    description: "Получение всех сотрудников по определенному праву"
+    api: post|api/get_employees_by_action
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: ActionID
+              Type: string
+              Tag: 'json:"action_id" binding:"required,max=50"'
+    do: CUSTOM|GetEmployeesByActionHandler|BODY;employee_id
+    responses:
+      - code: 200
+        description: список пользователей по указанному праву
+        data_example: |-
+          {
+            "data": [
+              {
+                "employee_id": 123123,
+                "employee_name": "петр",
+                "ch_employee_id": 2,
+                "ch_employee_name": "витя",
+                "ch_dt": "2024-06-10T15:40:48.174301"
+              },
+              {
+                "employee_id": 1233,
+                "employee_name": "леха",
+                "ch_employee_id": 3432,
+                "ch_employee_name": "саня",
+                "ch_dt": "2024-06-10T15:40:48.174301"
+              },
+            ]
+          }
+      - code: 204
+        description: список пользователей по данному праву пуст
+
+  - title: Получение доступов по employee_id сотрудника
+    description: "Получение списка доступов Access в wh-support по employee_id сотрудника"
+    api: get|api/get_access_actions_by_employee_id
+    auth_type: basic+e
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetAccessActionsByEmployeeID|employee_id
+    responses:
+      - code: 200
+        description: список прав пользователя
+        data_example: |-
+          {
+            "data": {
+              "action_ids": [string]
+            }
+          }
+      - code: 204
+        description: у пользователя отсутствуют права
+
+  - title: Получение всех типов действий
+    description: "Получение всех типов действий"
+    api: get|api/type_actions
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    do: CUSTOM|GetTypeActions
+    responses:
+      - code: 200
+        description: список типов действия
+        data_example: |-
+          {
+            "data": [{
+              "typeaction_id": "status_category",
+              "typeaction_desc": "Исполнение статусов в категории"
+            }, {
+              "typeaction_id": "view_info_category",
+              "typeaction_desc": "Просмотр информации по заявкам категории"
+            }, {
+              "typeaction_id": "management_category",
+              "typeaction_desc": "Управление заявками категории"
+            }, {
+              "typeaction_id": "create_category",
+              "typeaction_desc": "Создание заявки категории"
+            }
+            ]
+          }
+
+  - title: Создание типа действия
+    description: "Создаёт тип действия с переданным идентификатором и описанием"
+    api: post|api/type_actions/create
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: AddTypeAction
+      schema:
+        - type_name: AddTypeAction
+          fields:
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required,min=5,max=50"'
+            - Name: TypeActionDesc
+              Type: string
+              Tag: 'json:"typeaction_desc" binding:"required,min=5,max=200"'
+    do: CUSTOM|AddTypeAction|BODY;employee_id
+    responses:
+      - code: 204
+        description: тип действия успешно создан
+
+  - title: Удаление типа действия
+    description: "Удаляет тип действия с переданным идентификатором"
+    api: post|api/type_actions/delete
+    auth_type: basic+e
+    auth_actions:
+      - "action.accessManager"
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: DeleteTypeAction
+      schema:
+        - type_name: DeleteTypeAction
+          fields:
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required,min=5,max=50"'
+    do: CUSTOM|DeleteTypeAction|BODY;employee_id
+    responses:
+      - code: 204
+        description: тип действия успешно удалён

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  redis-master:
+    image: redis
+    command: redis-server --requirepass str0ng_passw0rd
+    ports:
+      - "6379:6379"
+
+  redis-slave:
+    image: redis
+    command: redis-server --slaveof redis-master 6379 --requirepass str0ng_passw0rd --masterauth str0ng_passw0rd
+    depends_on:
+      - redis-master
+
+  redis-sentinel:
+    image: redis
+    command: redis-sentinel /etc/redis-config/sentinel.conf --sentinel
+    ports:
+      - "26379:26379"
+    depends_on:
+      - redis-master
+      - redis-slave
+    volumes:
+      - "./config:/etc/redis-config"
+  
+

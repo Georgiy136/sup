@@ -1,0 +1,4 @@
+{
+  "auth_token_ttl_duration": "572h",
+  "refresh_window": "1h"
+}

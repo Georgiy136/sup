@@ -1,0 +1,32 @@
+{
+  "support.tickets.changes": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_no_data": "10s",
+    "cron_time_sleep_on_ok": "2s",
+    "count_data_without_sleep": 1000
+  },
+  "support.tickets.categories": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_no_data": "10s",
+    "cron_time_sleep_on_ok": "2s",
+    "count_data_without_sleep": 1000
+  },
+  "support.tickets.category.statuses": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_no_data": "10s",
+    "cron_time_sleep_on_ok": "2s",
+    "count_data_without_sleep": 1000
+  },
+  "support.tickets.groups": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_no_data": "10s",
+    "cron_time_sleep_on_ok": "2s",
+    "count_data_without_sleep": 1000
+  },
+  "support.tickets.scenarios": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_no_data": "10s",
+    "cron_time_sleep_on_ok": "2s",
+    "count_data_without_sleep": 1000
+  }
+}

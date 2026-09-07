@@ -1,0 +1,131 @@
+{
+  "urls": [
+    "http://localhost:8083"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "WhSprutenvAdministrationWhDelete": "/api/wh.sprutenv.administration.wh.delete/v001",
+    "WhSprutenvAdministrationWhDeactivateV001": "/api/sprutenv.administration.wh.deactivate/v001",
+    "WhSprutenvAdministrationWhAdd": "api/sprutenv.administration.wh.add/v003",
+    "WhSprutenvAdministrationSprutOfficeAdd": "api/wh.sprutenv.administration.sprut_office.add/v001",
+    "WhSprutenvAdministrationStoragePlacesGetByWh": "api/sprutenv.administration.storageplaces.get_by_wh/v001",
+    "WhSprutenvAdministrationStageAdd": "api/wh.sprutenv.administration.stage.add/v001",
+    "WhSprutenvAdministrationPartAdd": "api/sprutenv.administration.stagepart.create/v001",
+    "WhSprutenvAssemblyAdministrationAssemblySheetTerminate": "api/assembly.administration.assembly_sheet.terminate/v001",
+    "WhSprutenvAssemblyAdministrationStreetExclusionUpdate": "api/assembly.administration.street_exclusion.update/v001",
+    "WhSprutenvAssemblyAdministrationStreetExclusionFromSaleUpdateV002": "api/assembly.administration.street_exclusion_from_sale.update/v002",
+    "WhSprutenvAssemblyAdministrationStageExclusionFromSaleUpdateV001": "api/assembly.administration.stage_exclusion_from_sale.update/v001",
+    "WhSprutenvAssemblyAdministrationStageExclusionFromAssemblyUpdateV001": "api/assembly.administration.stage_exclusion_from_assembly.update/v001",
+    "SupportInventAdministrationInventTaskCreateInventTaskNoWithdrawal": "api/support.invent.administration.invent_task.no_withdrawal.create/v001",
+    "SupportInventAdministrationInventTaskCreateInventTaskWithWithdrawal": "api/support.invent.administration.invent_task.with_withdrawal.create/v001",
+    "InventAdministrationGoodsOnStockTaskAdd": "api/invent.administration.goods_on_stock_task.add/v001",
+    "WhSprutenvStageStreetUpsertInnerV001": "api/wh.sprutenv.stage.street.upsert/inner/v001",
+    "WhSprutenvStagePartSettingsTransferWhForStockV001": "api/sprutenv.stagepart.settings.transfer.wh.for_stock/v001"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2,
+  "mock": {
+    "WhSprutenvAdministrationStageAdd": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "sprutenv.std.err_biz.stage.already_exists",
+              "message": "Этаж уже существует",
+              "detail": "Этаж с указанным номером уже существует на складе",
+              "message_values": {
+                "stage_id": "5",
+                "wh_id": "42"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "WhSprutenvAdministrationPartAdd": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "sprutenv.std.err_biz.part.already_exists",
+              "message": "Парт уже существует",
+              "detail": "Парт для указанного этажа уже существует",
+              "message_values": {
+                "stage_id": "5",
+                "part_name": "A"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "WhSprutenvAdministrationWhDelete": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "sprutenv.std.err_biz.part.WhSprutenvAdministrationWhDelete",
+              "message": "Нельзя закрыть блок - бизнесс ошибка )",
+              "detail": "Нельзя закрыть блок - бизнесс ошибка )",
+              "message_values": {
+              }
+            }
+          ]
+        }
+      }
+    },
+    "WhSprutenvAdministrationWhDeactivateV001": {
+      "post": {
+        "code": 200,
+        "response": {}
+      }
+    },
+    "WhSprutenvAdministrationStoragePlacesGetByWh": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": [
+            1224555,
+            53454754,
+            5345452,
+            53454577,
+            53454541,
+            53454114,
+            5345444,
+            5345499,
+            534542224
+          ]
+        }
+      }
+    },
+    "InventAdministrationGoodsOnStockTaskAdd": {
+      "post": {
+        "code": 400,
+        "response": {
+          "errors": [
+            {
+              "error": "std.std.err_vld.request.body.wrong",
+              "message": "Incorrect request format.",
+              "detail": "ID:171c1cdb-7cf3-4fab-7114-cb5988fafd52; invalid excise ext_ids: [010460435451608215?tORVpT 010460435451608215?abcXYZ]"
+            }
+          ]
+        }
+      }
+    },
+    "WhSprutenvAssemblyAdministrationStageExclusionFromAssemblyUpdateV001": {
+      "post": {
+        "code": 200
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+title: FrontSupplierApiProxyAdapter
+description: Сервис проксирования запросов к WhSupplier для получения информации по поставщикам.
+
+httpApis:
+  - title: Получение информации о поставщиках по nm_ids для селектора
+    api: POST|api/supplier/get_supplier_info_by_nm_ids
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: NmID
+              Type: int64
+              Tag: 'json:"nm_id" binding:"required,gt=0"'
+    do: supplier_api_adapter_client
+    responses:
+      - code: 200
+        description: Список поставщиков
+        data_example: |
+          {
+            "data": [
+              {
+                "nm_id": 1,
+                "supplier_id": 1,
+                "supplier_name": "Геральт из Ривии"
+              },
+              {
+                "nm_id": 2,
+                "supplier_id": 2,
+                "supplier_name": "Трисс Меригольд"
+              },
+              {
+                "nm_id": 4,
+                "supplier_id": 4,
+                "supplier_name": "Йеннифэр из Венгерберга"
+              }
+            ]
+          }
+      - code: 204
+        description: Информация по поставщикам не найдена

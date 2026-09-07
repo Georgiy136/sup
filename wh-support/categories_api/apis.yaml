@@ -1,0 +1,147 @@
+title: CategoriesApi
+description: |
+  Сервис категорий
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Получение древа категорий по типу экшена
+    api: post|api/categories/get_categories_tree
+    auth_type: basic+e
+    auth_actions:
+      - "action.reportsByTickets"
+      - "action.adminPanelByTickets"
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required"'
+    do: CUSTOM|GetCategoriesTree|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Древо категорий по типу экшена"
+        data_example: |-
+          {
+            "data": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "category_id": 5,
+                        "category_name": "Исключение тар из автосписания",
+                        "parent_category_id": 4
+                      }
+                    ],
+                    "category_id": 4,
+                    "category_name": "Автосписания",
+                    "parent_category_id": 1
+                  }
+                ],
+                "section_id": 1,
+                "section_name": "Складские процессы"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "category_id": 185,
+                        "category_name": "Тест. Тестовая категория для разных тестов",
+                        "parent_category_id": 215
+                      }
+                    ],
+                    "category_id": 215,
+                    "category_name": "Тест. Разное",
+                    "parent_category_id": 6
+                  }
+                ],
+                "section_id": 6,
+                "section_name": "Тесты"
+              }
+            ]
+          }
+      - code: 204
+        description: "У пользователя нет доступных категорий"
+
+  - title: Получение древа категорий для создания заявок
+    description: "Получить древо категорий для создания заявок"
+    api: get|api/categories/get_categories_tree_for_create_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetCategoriesTreeForCreateTicket|employee_id
+    responses:
+      - code: 200
+        description: "Древо категорий для создания заявок"
+        data_example: |-
+          {
+            "data": [{
+                    "children": [{
+                            "icon": "category",
+                            "color": "#FF5A7E",
+                            "children": [{
+                                    "color": "#5420D6",
+                                    "category_id": 204,
+                                    "category_name": "Задание команде инвентаризации",
+                                    "parent_category_id": 203
+                                }
+                            ],
+                            "category_id": 203,
+                            "category_name": "Инвентаризация",
+                            "parent_category_id": 1
+                        }
+                    ],
+                    "category_id": 1,
+                    "category_name": "Складские процессы"
+                }, {
+                    "children": [{
+                            "icon": null,
+                            "color": null,
+                            "children": [{
+                                    "color": null,
+                                    "category_id": 185,
+                                    "category_name": "Тест. Тестовая категория для разных тестов",
+                                    "parent_category_id": 215
+                                }
+                            ],
+                            "category_id": 215,
+                            "category_name": "Тест. Разное",
+                            "parent_category_id": 6
+                        }
+                    ],
+                    "category_id": 6,
+                    "category_name": "Тесты"
+                }
+            ]
+          }

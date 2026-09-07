@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package sync_models;
+
+option go_package = "./sync_models";
+
+import "github.com/alta/protopatch/patch/go.proto";
+
+message CategoryStatuses {
+    repeated CategoryStatus Data = 1 [(go.field).tags = 'json:"data" binding:"required,gt=0,dive"'];
+
+    message CategoryStatus {
+        int64 CategoryID = 1 [(go.field).tags = 'json:"category_id" binding:"required"'];
+        string StatusID = 2 [(go.field).tags = 'json:"status_id" binding:"required,len=3"'];
+        string StatusDescription = 3 [(go.field).tags = 'json:"status_description" binding:"required"'];
+        optional int64 GroupID = 4 [(go.field).tags = 'json:"group_id" binding:"omitempty"'];
+        optional bool IsDel = 5 [(go.field).tags = 'json:"is_del" binding:"required"'];
+        int64 ChEmployeeID = 6 [(go.field).tags = 'json:"ch_employee_id" binding:"required"'];
+        string ChDt = 7 [(go.field).tags = 'json:"ch_dt" binding:"required,IsRFC3339Nano"'];
+        int64 ConstructorOrderID = 8 [(go.field).tags = 'json:"constructor_order_id" binding:"required,gt=0"'];
+
+        int64 LogId = 100 [(go.field).tags = 'json:"log_id"'];
+    }
+}

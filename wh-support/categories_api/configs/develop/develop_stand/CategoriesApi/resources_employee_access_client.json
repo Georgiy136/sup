@@ -1,0 +1,33 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "GetAccessActionsByEmployeeID": "api/get_access_actions_by_employee_id"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s",
+  "retry_count": 2,
+  "mock": {
+    "GetAccessActionsByEmployeeID": {
+      "get": {
+        "code": 200,
+        "response": {
+          "data": {
+            "action_ids": [
+              "action1",
+              "action2"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

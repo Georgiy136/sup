@@ -1,0 +1,31 @@
+title: Categories Api Proxy Adapter
+description: Прокси адаптер для сервиса категорий
+
+httpApis:
+  - title: Загрузить файл в Mattermost
+    api: post|api/chat/upload_file
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: Files
+              Type: multipart.FileHeader
+              Tag: form:"file" binding:"required"
+    do: chat_provider_api_client
+
+  - title: Скачать файл из Mattermost
+    api: post|api/chat/download_file
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: FileID
+              Type: string
+              Tag: 'json:"file_id" binding:"required,lte=30"'
+    do: chat_provider_api_client

@@ -1,0 +1,16 @@
+title: Прокси-адаптер для сервиса заявок.
+description: Сервис проксирования запросов к апи для получения информации для заявок по заведению операций.
+httpApis:
+  - title: Получение всех типов операций
+    description: 'Выводит список типов всех операций'
+    api: get|api/prodtypes/get_all_with_parts
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: finance_tariff_cluster_adapter_client
+
+  - title: Получение селектора участков работ
+    description: 'Выводит список участков работ в формате селектора для фронта'
+    api: get|api/prodtype_parts/get_selector
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: finance_tariff_cluster_adapter_client

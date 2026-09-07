@@ -1,0 +1,10 @@
+{
+  "keycloak_host": "https://keycloak.wildberries.ru",
+  "realm": "infrastructure",
+  "client_id": "support.alpha.wbwh.tech",
+  "client_secret": "{{KeycloakClientSecret}}",
+  "response_timeout": "5s",
+  "retry_count": 2,
+  "token_ttl": "1m",
+  "token_clean_interval": "5m"
+}

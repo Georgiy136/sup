@@ -1,0 +1,118 @@
+title: WbstorenvWarehouseInfoApiAdapter
+description: Сервис получения списка всех складских офисов и получения селектора спрутов.
+httpApis:
+  - title: Получение списка всех складских офисов
+    description: 'Выводит список складских офисов. Можно выводить удаленные.'
+    api: get|api/offices/list
+    auth_type: basic+e
+    do: CUSTOM|ListWarehousesOffices
+
+  - title: Получение селектора офисов
+    description: 'Выводит список офисов в формате селектора для фронта.'
+    api: get|api/offices/get_selector
+    auth_type: basic+e
+    do: CUSTOM|GetSelectorOffices
+
+  - title: Получение селектора спрутовых офисов с фильтрацией по country_code
+    description: 'Выводит список офисов, отфильтрованных по country_code, в формате селектора для фронта.'
+    api: get|api/offices/get_selector_filtered_by_country_code
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetSelectorOfficesFilteredByCountryCode|employee_id
+
+  - title: Получение селектора блоков по офису
+    description: 'Выводит список блоков по офису в формате селектора для фронта.'
+    api: post|api/wh/get_selector
+    auth_type: basic+e
+    body:
+      structure_name: OfficeInfo
+      schema:
+        - type_name: OfficeInfo
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: CUSTOM|GetSelectorWh|BODY
+
+  - title: Получение селектора branch офисов без удаленных офисов
+    api: post|api/offices/get_selector_branch_offices
+    auth_type: basic+e
+    body:
+      structure_name: OfficeInfo
+      schema:
+        - type_name: OfficeInfo
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: CUSTOM|GetSelectorBranchOffices|BODY
+
+  - title: Получение селектора блоков по офису без учета удаленных
+    description: 'Выводит список блоков по офису без учета удаленных в формате селектора для фронта.'
+    api: post|api/wh/get_selector_without_del
+    auth_type: basic+e
+    body:
+      structure_name: OfficeInfo
+      schema:
+        - type_name: OfficeInfo
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: CUSTOM|GetSelectorWhWithoutDel|BODY
+
+  - title: Проверка аббревиатуры блока
+    description: 'Проверяет, что аббревиатура блока валидна и не существует'
+    api: post|api/wh/check_new_abbreviation
+    auth_type: basic+e
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: PlaceNamePrefix
+              Type: string
+              Tag: 'json:"value" binding:"required,gt=0,lte=5"'
+    do: CUSTOM|CheckWhAbbreviation|BODY
+
+  - title: Проверка нового названия блока
+    description: 'Проверяет, что название блока валидно и не существует'
+    api: post|api/wh/check_new_name
+    auth_type: basic+e
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: WhName
+              Type: string
+              Tag: 'json:"value" binding:"required,gt=0,lte=128"'
+    do: CUSTOM|CheckWhName|BODY
+
+  - title: Получение списка всех процессов
+    api: get|api/business_process/get_all
+    auth_type: basic+e
+    do: CUSTOM|BusinessProcessesGetAll
+
+  - title: Получение списка всех статусов
+    api: get|api/shk_state/get_all
+    auth_type: basic+e
+    do: CUSTOM|ShkStateGetAll
+
+  - title: Проверка существования статуса
+    api: post|api/shk_state/check_by_id
+    auth_type: basic+e
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: StateID
+              Type: string
+              Tag: json:"value" binding:"required,len=3"
+    do: CUSTOM|ShkStateCheckByID|BODY

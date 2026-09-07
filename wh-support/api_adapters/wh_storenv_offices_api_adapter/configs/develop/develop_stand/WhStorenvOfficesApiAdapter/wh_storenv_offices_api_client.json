@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "get_all_type_point": "api/type_point/get_all"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

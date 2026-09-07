@@ -1,0 +1,28 @@
+### Получение информации по офисам
+POST http://localhost:8080/v1/offices
+Content-Type: application/json
+Accept: application/json
+
+{
+  "limit": 0,
+  "lm_route_id": 0,
+  "office_ids": [
+    4, 33
+  ],
+  "offset": 0,
+  "parent_office_id": 0,
+  "points": [
+  ],
+  "type_points": [
+  ]
+}
+
+### Получение информации по спрутам
+GET http://localhost:8080/v1/spruts
+Content-Type: application/json
+Accept: application/json
+
+### Получение информации по спрутам (выводит офисы с type_point 11, 12, 13, 15, 16, 24, 72)
+GET http://localhost:8080/api/v1/filtered/offices
+Content-Type: application/json
+Accept: application/json

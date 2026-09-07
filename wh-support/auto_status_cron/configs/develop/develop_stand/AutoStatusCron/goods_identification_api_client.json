@@ -1,0 +1,18 @@
+{
+  "urls": [
+    "http://localhost:8101"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "CreateInternalOrder": "api/wh_support/internal_order/create"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2
+}

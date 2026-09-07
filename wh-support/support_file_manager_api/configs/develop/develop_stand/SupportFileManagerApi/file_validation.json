@@ -1,0 +1,56 @@
+{
+  "allowed_mime_types": {
+    "application/pdf": {
+      "extensions": [".pdf"],
+      "max_size_bytes": 15728640
+    },
+    "application/msword": {
+      "extensions": [".doc"],
+      "max_size_bytes": 15728640
+    },
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+      "extensions": [".docx"],
+      "max_size_bytes": 15728640
+    },
+    "application/vnd.ms-excel": {
+      "extensions": [".xls"],
+      "max_size_bytes": 15728640
+    },
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+      "extensions": [".xlsx"],
+      "max_size_bytes": 15728640
+    },
+    "text/csv": {
+      "extensions": [".csv"],
+      "max_size_bytes": 15728640
+    },
+    "application/vnd.ms-powerpoint": {
+      "extensions": [".ppt"],
+      "max_size_bytes": 15728640
+    },
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
+      "extensions": [".pptx"],
+      "max_size_bytes": 15728640
+    },
+    "text/plain": {
+      "extensions": [".txt"],
+      "max_size_bytes": 15728640
+    },
+    "image/jpeg": {
+      "extensions": [".jpg", ".jpeg"],
+      "max_size_bytes": 15728640
+    },
+    "image/png": {
+      "extensions": [".png"],
+      "max_size_bytes": 15728640
+    },
+    "video/mp4": {
+      "extensions": [".mp4"],
+      "max_size_bytes": 104857600
+    },
+    "video/quicktime": {
+      "extensions": [".mov"],
+      "max_size_bytes": 104857600
+    }
+  }
+}

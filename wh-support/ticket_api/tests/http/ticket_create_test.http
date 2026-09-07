@@ -1,0 +1,166 @@
+### Создать новую заявку
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 185,
+  "create_employee_id": {{employee_id}},
+  "scenario_order_id": 1,
+  "ticket_name": "Тестовая заявка",
+  "info_for_create": {
+    "office_id": {
+      "id": 318388,
+      "name": "Адыгея"
+    }
+  }
+}
+
+### 400 Создать новую заявку с URL в названии
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 185,
+  "create_employee_id": {{employee_id}},
+  "scenario_order_id": 1,
+  "ticket_name": "Тестовая заявка https://example.com",
+  "info_for_create": {
+    "office_id": {
+      "id": 318388,
+      "name": "Адыгея"
+    }
+  }
+}
+
+### Создать новую заявку
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 2,
+  "comment": "uzhe ne hochu pitsu",
+  "create_employee_id": {{employee_id}},
+  "info_for_create": "{\"block_id\": 124,\"block_name\": \"офис1\",\"office_name\": \"блок1\"}"
+}
+### Создать новую заявку
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 3,
+  "comment": "opyat hochu pitsu",
+  "create_employee_id": {{employee_id}},
+  "info_for_create": "{\"office_id\": 124,\"office_name\": \"офис1\",\"block_id\": 124,\"block_name\": \"блок1\",\"my_id\": 124,\"my_name\": \"имя1\",\"space_id\": 124,\"space_name\": \"space\"}"
+}
+
+### Создать новую заявку
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 2,
+  "comment": "oaoaoaao mmm",
+  "create_employee_id": {{employee_id}},
+  "info_for_create": "{\"office_id\": 124}"
+}
+
+### Создать новую заявку
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 5,
+  "comment": "kollegi, podskazhite",
+  "create_employee_id": {{employee_id}},
+  "info_for_create": "{\"office_id\": 124}"
+}
+
+### Создать новую заявку
+POST {{host}}/api/tickets/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 238,
+  "comment": "turniketi ne rabotaut(((",
+  "create_employee_id": {{employee_id}},
+  "info_for_create": "{\"office_id\": 124}"
+}
+
+### Создать новую заявку с проверкой прав доступа сотрудника к категориям и статусам заявки через группы доступа и проверкой внешних прав сотрудника через сервис resources_employee_access
+POST {{host}}/api/ticket/create?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 185,
+  "create_employee_id": {{employee_id}},
+  "scenario_order_id": 1,
+  "ticket_name": "Тестовая заявка",
+  "info_for_create": {
+    "office_id": {
+      "id": 31834,
+      "name": "Приморский край"
+    }
+  }
+}
+
+### Создать новую заявку с возможностью прикрепления файлов
+POST {{host}}/api/ticket/create_v2?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 174,
+  "ticket_name": "тестовая заявка на создание доп транса",
+  "scenario_order_id": 0,
+  "files": {
+    "excel": [{
+      "file_id": 123,
+      "file_type": "application/pdf",
+      "file_size": 5284324,
+      "file_name": "text"
+    }],
+    "rules_file": [{
+      "file_id": 143,
+      "file_type": "application/msword",
+      "file_size": 52845324
+    }]
+  },
+  "info_for_create": {
+    "responsible_id": {
+      "id": 1305064,
+      "name": "Луцук Ренат Александрович"
+    },
+    "excel": [{
+      "file_id": 123,
+      "file_type": "application/pdf",
+      "file_size": 5284324
+    }],
+    "rules_file": [{
+      "file_id": 143,
+      "file_type": "application/msword",
+      "file_size": 52845324,
+      "file_name": "text"
+    }],
+    "date": "2026-05-01"
+  }
+}
+
+### Создать новую заявку
+POST {{host}}/api/ticket/create_v2?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 467,
+  "ticket_name": "76543",
+  "scenario_order_id": 0,
+  "info_for_create": null
+}

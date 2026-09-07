@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package sync_models;
+
+option go_package = "./sync_models";
+
+import "github.com/alta/protopatch/patch/go.proto";
+
+message Groups {
+    repeated Group Data = 1 [(go.field).tags = 'json:"data" binding:"required,gt=0,dive"'];
+
+    message Group {
+        int64 GroupID = 1 [(go.field).tags = 'json:"group_id" binding:"required"'];
+        string GroupName = 2 [(go.field).tags = 'json:"group_name" binding:"required"'];
+        optional bool IsDel = 3 [(go.field).tags = 'json:"is_del" binding:"required"'];
+        int64 ChEmployeeID = 4 [(go.field).tags = 'json:"ch_employee_id" binding:"required"'];
+        string ChDt = 5 [(go.field).tags = 'json:"ch_dt" binding:"required,IsRFC3339Nano"'];
+
+        int64 LogId = 100 [(go.field).tags = 'json:"log_id"'];
+    }
+}

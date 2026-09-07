@@ -1,0 +1,455 @@
+variables:
+  SERVER_GROUP: wh-px-support
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  DOCKER_AUTH_CONFIG: '{"auths":{"$DOCKER_REGISTRY":{"auth":"$DOCKER_AUTH"}}}'
+
+.trigger-deploy:
+  stage: call_trigger
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+      changes:
+        - "${PROJECT_PATH}/**/*"
+    - when: never
+  trigger:
+    project: ${PROJECT_URL}
+
+AutoStatusCron deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: auto_status_cron
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/cron_01/AutoStatusCron.yml
+
+FileValidationCron deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: file_validation_cron
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/cron_01/FileValidationCron.yml
+
+BandNotificationsBot deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: band_notifications_bot
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/bot_01/BandNotificationsBot.yml
+
+TicketApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: ticket_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/TicketApi.yml
+
+TicketApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/ticket_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/TicketApiProxyAdapter.yml
+
+PersonalAccountApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: personal_account_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/PersonalAccountApi.yml
+
+PersonalAccountApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/personal_account_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/PersonalAccountApiProxyAdapter.yml
+
+TelegramApproveBot deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: telegram_approve_bot
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/bot_01/TelegramApproveBot.yml
+
+FrontResourcesEmployeeAccessProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_resources_employee_access_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontResourcesEmployeeAccessProxyAdapter.yml
+
+FrontWbstorenvWarehouseInfoApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_wbstorenv_warehouse_info_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontWbstorenvWarehouseInfoApiProxyAdapter.yml
+
+ResourcesCacheCron deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: resources_cache_cron
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/cron_01/ResourcesCacheCron.yml
+
+TicketApproveCron deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: ticket_approve_cron
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/cron_01/TicketApproveCron.yml
+
+ResourcesEmployeeAccess deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: resources_employee_access
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/ResourcesEmployeeAccess.yml
+
+EmployeeAccessService deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: employee_access
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/auth_01/EmployeeAccess.yml
+
+StatisticsApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: statistics_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/StatisticsApi.yml
+
+FrontEmployeeSearchApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_employee_search_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontEmployeeSearchApiProxyAdapter.yml
+
+EmployeeGroupApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: employee_group_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/EmployeeGroupApi.yml
+
+FrontEmployeeGroupApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_employee_group_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontEmployeeGroupApiProxyAdapter.yml
+
+FrontFinanceTariffClusterProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_finance_tariff_cluster_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontFinanceTariffClusterProxyAdapter.yml
+
+FrontStatisticsApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_statistics_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontStatisticsApiProxyAdapter.yml
+
+FrontWhSprutenvSprutOfficesApiPA deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_wh_sprutenv_sprut_offices_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontWhSprutenvSprutOfficesApiPA.yml
+
+FrontEmployeeInfoApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_employee_info_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontEmployeeInfoApiProxyAdapter.yml
+
+SprutAccessService deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: sprut_access_service
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/SprutAccessService.yml
+
+FrontSprutAccessServicePA deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_sprut_access_service_pa
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontSprutAccessServicePA.yml
+
+FrontMapsApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_maps_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontMapsApiProxyAdapter.yml
+
+CronSupportToWhOlap deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: cron_support_to_wh_olap
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/export_cron/CronSupportToWhOlap.yml
+
+FrontReportsCommonApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_reports_common_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontReportsCommonApiProxyAdapter.yml
+
+TicketReportsProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/ticket_reports_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/TicketReportsProxyAdapter.yml
+
+FrontWbstorenvPlaceInfoApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_wbstorenv_place_info_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontWbstorenvPlaceInfoApiProxyAdapter.yml
+
+FrontWhStorenvTareAttachmentTypesApiPA deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_wh_storenv_tare_attachment_types_api_pa
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontWhStorenvTareAttachmentTypesApiPA.yml
+
+FrontWhStorenvOfficesApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_wh_storenv_offices_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontWhStorenvOfficesApiProxyAdapter.yml
+
+FrontSupplierApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_supplier_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontSupplierApiProxyAdapter.yml
+
+FrontWbstorenvApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_wbstorenv_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontWbstorenvApiProxyAdapter.yml
+
+FrontExternalMobileControlPAProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_external_mobile_control_pa_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontExternalMobileControlPAProxyAdapter.yml
+
+CategoriesApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: categories_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/CategoriesApi.yml
+
+FrontCategoriesApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_categories_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontCategoriesApiProxyAdapter.yml
+
+BuildingsAdministrationApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/buildings_administration_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/BuildingsAdministrationApiAdapter.yml
+
+BuildingsAdministrationGetApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/buildings_administration_get_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/BuildingsAdministrationGetApiAdapter.yml
+
+FinanceTariffClusterApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/finance_tariff_cluster_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/FinanceTariffClusterApiAdapter.yml
+
+MapsApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/maps_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/MapsApiAdapter.yml
+
+WbstorenvPlaceInfoApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/wbstorenv_place_info_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/WbstorenvPlaceInfoApiAdapter.yml
+
+WbstorenvWarehouseInfoApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/wbstorenv_warehouse_info_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/WbstorenvWarehouseInfoApiAdapter.yml
+
+WhSprutenvSprutOfficesApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/wh_sprutenv_sprut_offices_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/WhSprutenvSprutOfficesApiAdapter.yml
+
+WhStorenvTareAttachmentTypesApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/wh_storenv_tare_attachment_types_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/WhStorenvTareAttachmentTypesApiAdapter.yml
+
+WhStorenvOfficesApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/wh_storenv_offices_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/WhStorenvOfficesApiAdapter.yml
+
+SupplierApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/supplier_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/SupplierApiAdapter.yml
+
+WbstorenvApiAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/wbstorenv_api_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/WbstorenvApiAdapter.yml
+
+ExternalMobileControlPAAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: api_adapters/external_mobile_control_pa_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/adapter_01/ExternalMobileControlPAAdapter.yml
+
+ChatAuthService deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: chat_auth_service
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/auth_01/ChatAuthService.yml
+
+ChatAuthServiceProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_chat_auth_service_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontChatAuthServiceProxyAdapter.yml
+
+SupportFileManagerApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: support_file_manager_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/SupportFileManagerApi.yml
+
+ChatProviderApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: chat_provider_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/ChatProviderApi.yml
+
+ChatApi deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: chat_api
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_main_01/ChatApi.yml
+
+FrontChatApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/front_chat_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/FrontChatApiProxyAdapter.yml
+
+ChatProviderApiProxyAdapter deploy prod:
+  extends: .trigger-deploy
+  variables:
+    TOKEN_NAME: SUPPORT_Infrastructure
+    PROJECT_PATH: proxy_adapters/chat_provider_api_proxy_adapter
+    PROJECT_URL: wbwh/support/infrastructure
+    TRIGGER_PATH: deploy/cis.rus.wh-px-support/api_proxy_01/ChatProviderApiProxyAdapter.yml

@@ -1,0 +1,75 @@
+POST {{host}}/api/categories/update_status?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "category_id": 123,
+  "status_info": [
+    {
+      "is_main": true,
+      "status_id": "NEW",
+      "constructor_order_id": 1,
+      "approve_group_id": 10,
+      "perform_group_id": 20,
+      "information_model": {
+        "ui_type": "form",
+        "version": 2
+      },
+      "approve_group_name": "Approvers",
+      "perform_group_name": "Performers",
+      "status_description": "Новый статус заявки",
+      "autoapi": "auto_create_ticket",
+      "scenario_label": "Основной сценарий",
+      "warning_description": "Требует проверки данных",
+      "info_description": "Создание новой заявки",
+      "has_prereject": false,
+      "is_blocked_reject": true,
+      "return_status_ids": ["CRT"],
+      "added_information_model": [
+        {
+          "scenario_order_id": 1,
+          "scenario_name": "Создание тикета",
+          "next_status_id": "APR",
+          "scenario_added_information_model": [
+            {
+              "data_name": "priority",
+              "order_id": 1,
+              "data_type": "string",
+              "front_data_name": "Приоритет",
+              "is_required": true,
+              "front_model": {
+                "type": "select",
+                "options": [
+                  {
+                    "label": "Высокий",
+                    "value": "high"
+                  },
+                  {
+                    "label": "Низкий",
+                    "value": "low"
+                  }
+                ],
+                "default": "low"
+              },
+              "is_hidden_for_creator": false
+            },
+            {
+              "data_name": "description",
+              "order_id": 2,
+              "data_type": "text",
+              "front_data_name": "Описание",
+              "is_required": false,
+              "front_model": {
+                "type": "textarea",
+                "max_length": 500,
+                "placeholder": "Введите описание"
+              },
+              "is_hidden_for_creator": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

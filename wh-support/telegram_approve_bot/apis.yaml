@@ -1,0 +1,33 @@
+title: TelegramApproveBot
+description: |
+  Сервис заявок
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Отправить уведомление
+    api: post|api/ticket/notification
+    auth_type: basic
+    body:
+      custom_body_parser: true
+    do: CUSTOM|SendNotification|RawBODY
+    responses:
+      - code: 204
+        description: "Уведомление было отправлено"

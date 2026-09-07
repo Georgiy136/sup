@@ -1,0 +1,18 @@
+title: Aдаптер для инпутов сервиса заявок.
+description: Сервис проксирования запросов к апи для сервиса тар на сторенв.
+httpApis:
+  - title: Проверка нового статуса тары
+    api: POST|api/tare_state/check_by_state_id
+    auth_type: basic+e
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: StateID
+              Type: "string"
+              Tag: 'json:"value" binding:"required,len=3"'
+    do: CUSTOM|CheckTareStateByID|BODY
+    responses:
+      - code: 204
+        description: новый статус тары валиден

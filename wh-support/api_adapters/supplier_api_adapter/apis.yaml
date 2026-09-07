@@ -1,0 +1,49 @@
+title: SupplierApiAdapter
+description: Сервис проксирования запросов к WhSupplier для получения информации по поставщикам.
+
+httpApis:
+  - title: Получение информации о поставщике по nm_id для селектора
+    api: POST|api/supplier/get_supplier_info_by_nm_ids
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: NmID
+              Type: int64
+              Tag: 'json:"nm_id" binding:"required,gt=0"'
+    do: CUSTOM|GetSupplierInfoByNmIDs|BODY;employee_id
+    responses:
+      - code: 200
+        description: Информация по поставщику
+        data_example: |
+          {
+            "data":{
+              "value": [
+                {                
+                  "nm_id": 1,
+                  "supplier_id": 1,
+                  "supplier_name": "Геральт из Ривии"
+                }
+              ],
+              "is_valid": true,
+              "err_msg": ""
+            }
+          }
+      - code: 204
+        description: Информация по поставщику не найдена
+        data_example: |
+          {
+            "data": {
+              "value": null
+              "is_valid": false,
+              "err_msg": "Поставщик не найден"
+            }
+          }

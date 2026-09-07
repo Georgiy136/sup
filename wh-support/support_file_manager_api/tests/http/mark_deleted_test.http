@@ -1,0 +1,8 @@
+### Пометить файл как удалённый
+POST http://{{host}}/api/files/mark_deleted
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_id": 23
+}

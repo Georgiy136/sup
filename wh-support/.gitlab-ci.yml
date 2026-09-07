@@ -1,0 +1,131 @@
+include:
+  - project: wbwh/devops/ci/trigger_ci_cd
+    file: trigger.yml
+  - project: wbwh/devops/ci/deploy_service_cicd
+    file: deploy_virtual_v17.yml
+    ref: main
+  - project: "wbwh/wh-core/cicd_gnome"
+    file:
+      - "workflow/.build.yml"
+    ref: main
+  - local: ".gitlab/*.yaml"
+
+.build_variables:
+  parallel:
+    matrix:
+      - PROJECT_PATH: ticket_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: personal_account_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: resources_employee_access
+        PROJECT_TYPE: API
+      - PROJECT_PATH: employee_access
+        PROJECT_TYPE: API
+      - PROJECT_PATH: employee_group_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: statistics_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: sprut_access_service
+        PROJECT_TYPE: API
+      - PROJECT_PATH: categories_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: chat_auth_service
+        PROJECT_TYPE: API
+      - PROJECT_PATH: support_file_manager_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: chat_provider_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: chat_api
+        PROJECT_TYPE: API
+
+      # ADAPTERS
+      - PROJECT_PATH: api_adapters/finance_tariff_cluster_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/maps_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/wbstorenv_place_info_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/wbstorenv_warehouse_info_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/wh_sprutenv_sprut_offices_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/wh_storenv_offices_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/wh_storenv_tare_attachment_types_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/oauth_password_adapter_api
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/supplier_api_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/external_mobile_control_pa_adapter
+        PROJECT_TYPE: API
+      - PROJECT_PATH: api_adapters/wbstorenv_api_adapter
+        PROJECT_TYPE: API
+
+      # PROXY_ADAPTERS
+      - PROJECT_PATH: proxy_adapters/ticket_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/personal_account_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_resources_employee_access_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_wbstorenv_warehouse_info_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_maps_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_employee_info_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_employee_search_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_employee_group_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_finance_tariff_cluster_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_statistics_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_wh_sprutenv_sprut_offices_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_sprut_access_service_pa
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_reports_common_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/ticket_reports_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_wbstorenv_place_info_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_wh_storenv_offices_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_wh_storenv_tare_attachment_types_api_pa
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_categories_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_chat_auth_service_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_supplier_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_chat_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/chat_provider_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_external_mobile_control_pa_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+      - PROJECT_PATH: proxy_adapters/front_wbstorenv_api_proxy_adapter
+        PROJECT_TYPE: PROXY_ADAPTER
+
+      # BOTS
+      - PROJECT_PATH: telegram_approve_bot
+        PROJECT_TYPE: API
+      - PROJECT_PATH: band_notifications_bot
+        PROJECT_TYPE: API
+
+      # CRONS
+      - PROJECT_PATH: auto_status_cron
+        PROJECT_TYPE: CRON
+      - PROJECT_PATH: resources_cache_cron
+        PROJECT_TYPE: CRON
+      - PROJECT_PATH: ticket_approve_cron
+        PROJECT_TYPE: CRON
+      - PROJECT_PATH: cron_support_to_wh_olap
+        PROJECT_TYPE: CRON
+      - PROJECT_PATH: file_validation_cron
+        PROJECT_TYPE: CRON

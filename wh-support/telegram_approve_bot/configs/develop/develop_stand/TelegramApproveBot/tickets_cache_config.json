@@ -1,0 +1,12 @@
+{
+  "MasterName": "my_redis_master",
+  "SentinelAddrs": [
+    "0.0.0.0:26379",
+    "0.0.0.0:26379",
+    "0.0.0.0:26379"
+  ],
+  "SentinelPassword": "str0ng_passw0rd",
+  "Password": "str0ng_passw0rd",
+  "Mode": "sentinel",
+  "TTL": "240h"
+}

@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://localhost:8084"
+  ],
+  "response_timeout": "2s",
+  "auth": {
+    "type": "basic",
+    "basic_login": "{{HrEmployeePhotoApi_BasicAuth_Login}}",
+    "basic_password": "{{HrEmployeePhotoApi_BasicAuth_Password}}",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "GetEmployeePhoto": "/api/employee/photo"
+  }
+}

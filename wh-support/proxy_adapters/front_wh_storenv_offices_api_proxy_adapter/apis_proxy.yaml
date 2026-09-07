@@ -1,0 +1,20 @@
+title: Прокси-адаптер для инпутов сервиса заявок.
+description: Сервис проксирования запросов к апи для сервиса настроек офисов и блоков системы Wh-Tare на сторенве.
+httpApis:
+  - title: Получение из справочника всех типов ЛО для селектора
+    description: "Получение из справочника всех тайп поинтов офисов и их названий для селектора"
+    api: GET|api/type_point/get_filtered_type_points
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wh_storenv_offices_api_adapter_client
+    responses:
+      - code: 200
+        data_example: |-
+          {
+            "data": [
+              {
+                "type_point": 1,
+                "type_point_name": "фирменный ПВЗ"
+              }
+            ]
+          }

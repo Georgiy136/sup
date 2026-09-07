@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://localhost:8081"
+  ],
+  "apis": {
+    "get_warehouse_info_by_wh_id": "api/warehouse_info_get_by_wh_id"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

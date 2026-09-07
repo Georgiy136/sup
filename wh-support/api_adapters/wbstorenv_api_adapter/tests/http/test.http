@@ -1,0 +1,9 @@
+### Получение информации о поставщиках по nm_ids для селектора
+POST {{host}}/api/warehouse/get_warehouse_info_by_wh_id?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "wh_id": 123
+}

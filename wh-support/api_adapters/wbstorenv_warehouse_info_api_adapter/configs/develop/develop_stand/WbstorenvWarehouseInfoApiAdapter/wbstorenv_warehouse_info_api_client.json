@@ -1,0 +1,33 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "list_warehouses_offices": "api/list_of_warehouses_offices_with_blocks",
+    "get_wh_by_office": "api/warehouses_by_office",
+    "get_wh_by_office_v2": "api/warehouses_by_office_v2",
+    "check_new_wh_abbreviation": "api/wh/check_new_abbreviation",
+    "check_new_wh_name": "api/wh/check_new_name",
+    "business_processes_get_all": "api/business_process/get_all",
+    "shk_state_check_by_id": "api/shk_state/check_by_id",
+    "shk_state_get_all": "api/shk_state/get_all",
+    "branch_offices_list": "api/branch_offices_list"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s",
+  "mock": {
+    "branch_offices_list": {
+      "post": {
+        "code": 204,
+        "response": null
+      }
+    }
+  }
+}

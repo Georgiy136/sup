@@ -1,0 +1,108 @@
+title: Categories Api Proxy Adapter
+description: Прокси адаптер для сервиса категорий
+
+httpApis:
+  - title: Открытие чата
+    api: post|api/chat/get_chat
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: chat_api_client
+    responses:
+      - code: 200
+        description: "Чат уже существует"
+      - code: 201
+        description: "Чат создан"
+
+  - title: Отправка сообщения
+    api: post|api/chat/create_post
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Message
+              Type: "string"
+              Tag: 'json:"message" binding:"required,lte=5000"'
+            - Name: FileIDs
+              Type: string
+              Tag: 'json:"file_ids" binding:"omitempty,dive,lte=30"'
+              isSlice: true
+    do: chat_api_client
+    responses:
+      - code: 200
+        description: "Сообщение отправлено"
+
+  - title: Получение истории чата
+    api: post|api/chat/get_history_chat
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CountPost
+              Type: "int64"
+              Tag: 'json:"count_post" binding:"required,gt=0,lte=200"'
+            - Name: FromPost
+              Type: "string"
+              Tag: 'json:"from_post" binding:"required,lte=30"'
+            - Name: FromCreateAt
+              Type: string
+              Tag: 'json:"from_create_at" binding:"required,IsRFC3339Nano"'
+    do: chat_api_client
+    responses:
+      - code: 200
+        description: "История чата"
+
+  - title: Сигнал просмотра чата пользователем
+    api: post|api/chat/view
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: chat_api_client
+    responses:
+      - code: 200
+        description: "Время просмотра чата"
+
+  - title: API селектора в чате списка пользователей, имеющих доступ к заявке
+    api: post|api/chat/get_ticket_employees_for_chat_selector
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: chat_api_client
+    responses:
+      - code: 200
+        description: "Список пользователей"
+      - code: 204
+        description: "Список пользователей пуст"

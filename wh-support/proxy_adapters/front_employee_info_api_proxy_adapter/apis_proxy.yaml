@@ -1,0 +1,72 @@
+title: FrontEmployeeInfoApiProxyAdapter
+description: Прокси адаптер для сервиса получения информации по сотруднику
+httpApis:
+  - title: Получение информации о сотрудниках
+    description: 'Выводит подробную информацию о сотрудниках'
+    api: post|/api/employee/info_list
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_info_api_client
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: IDs
+              Type: int64
+              Tag: json:"ids" binding:"required,unique,gt=0,dive,EmployeeID"
+              IsSlice: true
+    responses:
+      - code: 200
+        description: успешный результат, в поле data возвращается объект информацией о сотруднике
+        data_example: |
+          {
+            "data": [
+            {
+              "employee_id": 39115,
+              "employee_name": "Кульпин Евгений Евгеньевич",
+              "isdeleted": false
+            },
+            {
+              "employee_id": 83082,
+              "employee_name": "Никишкин Михаил Дмитриевич",
+              "isdeleted": false
+            }
+            ]
+          }
+      - code: 204
+        description: Cотрудник не найден
+
+  - title: Получение информации о сотрудниках
+    description: 'Выводит подробную информацию о сотрудниках'
+    api: post|/api/employees_full_name
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_info_api_client
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: EmployeeIDs
+              Type: int64
+              Tag: json:"employee_ids" binding:"required,lte=1000,unique,dive,EmployeeID"
+              IsSlice: true
+      responses:
+        - code: 200
+          description: успешный результат, в поле data возвращается объект информацией о сотруднике
+          data_example: |
+            {
+              "data": [
+              {
+                "employee_id": 1,
+                "employee_name": "Иванов Иван Иванович",
+              },
+              {
+                "employee_id": 2,
+                "employee_name": "Иванов Иван Петрович",
+              }
+              ]
+            }
+        - code: 204
+          description: Cотрудник не найден

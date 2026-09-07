@@ -1,0 +1,13 @@
+{
+  "urls": [
+    "https://localhost/srv/reports/01/stored_proc/"
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": "1",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

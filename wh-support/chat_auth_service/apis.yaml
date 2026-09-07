@@ -1,0 +1,95 @@
+title: ChatAuthService
+description: |
+  API предоставляет эндпоинты для авторизации и управления подписками в чате.
+
+httpApis:
+  - title: Получение токена для подключения к чату
+    description: |
+      Эндпоинт для генерации JWT-токена для чата.
+      Вызывается из proxy_adapter после валидации Keycloak токена.
+    api: get|api/v1/realtime/token
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetRealtimeToken|employee_id
+    responses:
+      - code: 200
+        description: JWT токен для подключения к чату
+        data_example: |-
+          {
+            "data": {
+              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV..."
+            }
+          }
+
+
+  - title: Проверка прав на подписку к каналу чата
+    description: |
+      Centrifugo обращается в backend при попытке пользователя подписаться на канал.
+      Backend проверяет права доступа к чату на основе:
+      - пользователь является создателем заявки
+      - пользователь состоит в группе с правами на заявку
+      - пользователь является наблюдателем заявки
+      Документация: https://centrifugal.dev/docs/server/proxy#subscribe-proxy
+    api: post|internal/centrifugo/subscribe
+    auth_type: basic
+    body:
+      structure_name: ChatAuthSubscribeRequest
+      schema:
+        - type_name: ChatAuthSubscribeRequest
+          fields:
+            - Name: Channel
+              Type: string
+              Tag: 'json:"channel" binding:"required,lte=255"'
+            - Name: User
+              Type: string
+              Tag: 'json:"user" binding:"required"'
+    do: CUSTOM|ChatAuthSubscribe|BODY
+    responses:
+      - code: 200
+        description: Доступ разрешен
+        data_example: |-
+          {
+            "result": null
+          }
+      - code: 403
+        description: Доступ запрещен
+        data_example: |-
+          {
+            "error": {
+              "code": 403,
+              "message": "permission denied"
+            }
+          }
+
+  - title: Обновление токена чата
+    description: |
+      Centrifugo обращается в backend для refresh токена.
+      Backend генерирует новый токен на основе user ID.
+      Документация: https://centrifugal.dev/docs/server/proxy#refresh-proxy
+    api: post|internal/centrifugo/refresh
+    auth_type: basic
+    body:
+      structure_name: ChatAuthRefreshRequest
+      schema:
+        - type_name: ChatAuthRefreshRequest
+          fields:
+            - Name: User
+              Type: string
+              Tag: 'json:"user" binding:"required"'
+    do: CUSTOM|ChatAuthRefresh|BODY
+    responses:
+      - code: 200
+        description: |
+          Сессия успешно продлена.
+        data_example: |-
+          {
+            "result": {
+              "expired": false,
+              "expire_at": 1775731430
+            }
+          }

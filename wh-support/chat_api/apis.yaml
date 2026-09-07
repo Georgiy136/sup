@@ -1,0 +1,284 @@
+title: ChatApi
+description: |
+  Сервис бизнес-логики чата
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Открытие чата
+    api: post|api/chat/get_chat
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|GetChat|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Чат уже существует"
+        data_example: |-
+          {
+            "data": [
+              {
+              "ticket_id": 123,
+              "chat": {
+                "created": false,
+                "chat_name": "Чат по заявке 123",
+                "employee_id": 123,
+                "created_dt": "2026-04-12T10:00:00Z",
+                "messages_order": ["sdfdsklgjl"],
+                "messages": {
+                    "sdfdsklgjl": {
+                      "id": "sdfdsklgjl",
+                      "message": "Добрый день",
+                      "employee_id": "12345",
+                      "employee_name": "ФИО",
+                      "files": [
+                        {
+                        "file_id": "1234",
+                        "file_name": "sfsdf.pdf",
+                        "message_id": "sdfdsklgjl",
+                        "mime_type": "application/pdf"
+                        }
+                      ],
+                      "created_dt": "2026-04-12T10:10:00Z"
+                    }
+                },
+              "has_more": true,    
+              "limit": 20,    
+              "before": "sdfdsklgjl"  
+              }
+            ]
+          }
+      - code: 201
+        description: "Чат создан"
+        data_example: |-
+          {
+            "data": [
+              {
+                "ticket_id": 123,
+                "chat": {
+                  "created": true,
+                  "chat_name": "Чат по заявке 123",
+                  "employee_id": 123,
+                  "created_dt": "2026-04-12T10:00:00Z"
+                }
+              }
+            ]
+          }
+      - code: 422
+        description: "Заявки не существует"
+
+  - title: Отправка сообщения
+    api: post|api/chat/create_post
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Message
+              Type: "string"
+              Tag: 'json:"message" binding:"required,lte=5000"'
+            - Name: FileIDs
+              Type: string
+              Tag: 'json:"file_ids" binding:"omitempty,dive,lte=30"'
+              isSlice: true
+    do: CUSTOM|CreatePost|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Сообщение отправлено"
+        data_example: |-
+          {
+            "data": [
+              { 
+                "ticket_id": 123, 
+                "message": { 
+                    "id": "post_999", 
+                    "message": "Текст сообщения", 
+                    "employee_id": "12345", 
+                    "files": [ 
+                        { 
+                            "file_id": "1234", 
+                            "file_name": "sfsdf.pdf", 
+                            "message_id": "sdfdsklgjl", 
+                            "mime_type": "application/pdf" 
+                        } 
+                    ], 
+                    "created_dt": "2026-04-12T11:30:00Z" 
+                } 
+              }
+            ]
+          }
+      - code: 422
+        description: "Заявки не существует"
+      - code: 422
+        description: "Чат еще не создан"
+
+  - title: Получение истории чата
+    api: post|api/chat/get_history_chat
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CountPost
+              Type: "int64"
+              Tag: 'json:"count_post" binding:"required,gt=0,lte=200"'
+            - Name: FromPost
+              Type: "string"
+              Tag: 'json:"from_post" binding:"required,lte=30"'
+            - Name: FromCreateAt
+              Type: string
+              Tag: 'json:"from_create_at" binding:"required,IsRFC3339Nano"'
+    do: CUSTOM|GetHistoryChat|BODY;employee_id
+    responses:
+      - code: 200
+        description: "История чата"
+        data_example: |-
+          {
+            "data": [
+              { 
+                "ticket_id": 123, 
+                "messages_order": ["sdfdsklgjl"], 
+                "messages": { 
+                    "sdfdsklgjl": { 
+                        "id": "sdfdsklgjl", 
+                        "message": "Добрый день", 
+                        "employee_id": "12345", 
+                        "employee_name": "ФИО", 
+                        "files": [ 
+                            { 
+                                "file_id": "1234", 
+                                "file_name": "sfsdf.pdf", 
+                                "message_id": "sdfdsklgjl", 
+                                "mime_type": "application/pdf" 
+                            } 
+                        ], 
+                        "created_dt": "2026-04-12T10:10:00Z" 
+                    } 
+                }, 
+                "has_more": true, 
+                "limit": 20, 
+                "before": "sdfdsklgjl" 
+              }
+            ]
+          }
+      - code: 422
+        description: "Заявки не существует"
+      - code: 422
+        description: "Чат еще не создан"
+
+  - title: Сигнал просмотра чата пользователем
+    api: post|api/chat/view
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|ViewChatByUser|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Время просмотра чата"
+        data_example: |-
+          {
+            "data": [
+              { 
+                "ticket_id": 123, 
+                "time_view_chat": "2026-04-12T10:10:00Z"
+              }
+            ]
+          }
+      - code: 422
+        description: "Заявки не существует"
+      - code: 422
+        description: "Чат еще не создан"
+
+  - title: API селектора в чате списка пользователей, имеющих доступ к заявке
+    api: post|api/chat/get_ticket_employees_for_chat_selector
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: GetTicketEmployeesForChatSelector
+      schema:
+        - type_name: GetTicketEmployeesForChatSelector
+          fields:
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|GetTicketEmployeesForChatSelector|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Список пользователей"
+        data_example: |-
+          {
+            "data": [
+              {
+                "employee_id": 1029871,
+                "employee_name": "Иванов Иван Иванович"
+              }
+            ]
+          }
+      - code: 204
+        description: "Список пользователей пуст"

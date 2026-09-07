@@ -1,0 +1,26 @@
+{
+  "urls": [
+    "http://localhost:8091"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "GetUploadsForValidation": "api/uploads/uploads_for_validation",
+    "GetExpiredUploads": "api/uploads/expired_uploads",
+    "GetUploadsForTransfer": "api/uploads/uploads_for_transfer",
+    "GetFilesForDeletion": "api/files/files_for_deletion",
+    "GetFilesNotAttachedToTicketForDeleting": "api/files/get_files_not_attached_to_ticket_for_deleting",
+    "UpdateUploadStatus": "api/uploads/update_upload_status",
+    "MarkDeletedFile": "api/files/mark_deleted",
+    "TransferFile": "api/files/transfer",
+    "DeleteFile": "api/files/delete"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2
+}

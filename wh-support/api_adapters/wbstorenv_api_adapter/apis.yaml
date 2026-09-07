@@ -1,0 +1,50 @@
+title: WbstorenvApiAdapter
+description: Сервис проксирования запросов к WbStorenv для получения информации из хранилища словарей складских процессов.
+
+httpApis:
+  - title: Получение информации о существовании блока, наличии на нем виртуальных блоков и его активности по wh_id
+    api: POST|api/warehouse/get_warehouse_info_by_wh_id
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: WhID
+              Type: int64
+              Tag: 'json:"wh_id" binding:"required,WhID"'
+    do: CUSTOM|GetWarehouseInfoByWhID|BODY;employee_id
+    responses:
+      - code: 200
+        description: Информация по блоку
+        data_example: |
+          {
+            "data":{
+              "value": [
+                {                
+                  "wh_id": 12,
+                  "wh_name": "Коледино 3",
+                  "is_not_active": false,
+                  "is_exist_virtual_wh": false
+                }
+              ],
+              "is_valid": true,
+              "err_msg": ""
+            }
+          }
+      - code: 200
+        description: нет данных по блоку
+        data_example: |
+          {
+            "data": {
+              "value": null
+              "is_valid": false,
+              "err_msg": "Блок не найден или уже удален."
+            }
+          }

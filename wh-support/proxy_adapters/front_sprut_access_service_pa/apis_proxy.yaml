@@ -1,0 +1,207 @@
+title: Прокси адаптер к сервису Sprut Access Service
+description: Прокси адаптер к сервису для упрощенного доступа к спрут апи для фронта WH Support
+httpApis:
+  - title: Получение селектора строений по офису
+    api: post|api/buildings/get_selector_buildings
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: sprut_access_service_client
+    responses:
+      - code: 200
+        description: "Список билдингов в рамках выбранного офиса"
+        data_example: |
+          {
+            "data": [
+              "id": "12"
+            ]
+          }
+
+  - title: Проверка того, что выбранное строение не существует
+    api: post|api/buildings/check/building_not_exists
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+            - Name: BuildingID
+              Type: string
+              Tag: 'json:"value" binding:"required,gt=0"'
+    do: sprut_access_service_client
+    responses:
+      - code: 200
+        description: Строение не существует.
+        data_example: |-
+          {
+            "data": {
+              "is_valid": true,
+              "err_msg": ""
+            }
+          }
+      - code: 200
+        description: Строение существует.
+        data_example: |-
+          {
+            "data": {
+              "is_valid": false,
+              "err_msg": "Строение уже существует"
+            }
+          }
+
+  - title: Получение селектора этажей на блоке
+    api: post|api/offices/get_selector_stage_on_block
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+            - Name: WhID
+              Type: int64
+              Tag: 'json:"wh_id" binding:"required,WhID"'
+    do: sprut_access_service_client
+    responses:
+      - code: 200
+        data_example: |
+          {
+            "data": [
+              {
+                "id": 1, // stage
+              },
+              {
+                "id": 2, // stage
+              }
+            ]
+          }
+
+  - title: Получение списка мест хранения по секциям
+    description: "Получение списка мест хранения по секциям для селектора в заявке"
+    api: post|api/storageplaces/get_info_by_sections
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: StoragePlacesRequest
+      schema:
+        - type_name: StoragePlacesRequest
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+            - Name: WhID
+              Type: int64
+              Tag: 'json:"wh_id" binding:"required,WhID"'
+            - Name: Street
+              Type: int64
+              Tag: 'json:"street" binding:"required,gt=0"'
+            - Name: Stage
+              Type: "*int64"
+              Tag: 'json:"stage" binding:"omitempty,gte=0"'
+            - Name: SectionStart
+              Type: int64
+              Tag: 'json:"section_start" binding:"required,gt=0"'
+            - Name: SectionEnd
+              Type: int64
+              Tag: 'json:"section_end" binding:"required,gt=0"'
+    do: sprut_access_service_client
+    responses:
+      - code: 200
+        description: "Список мест хранения по секциям"
+        data_example: |
+          {
+            "data": [
+              {
+                "place_id": 2001,
+                "place_name": "B-01"
+              },
+              {
+                "place_id": 2021,
+                "place_name": "B-02"
+              }
+            ]
+          }
+
+  - title: Получение селектора партов на этаже
+    description: "Получение списка партов по этажу для селектора в заявке"
+    api: post|api/stages/get_selector_parts_on_stage
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+            - Name: WhID
+              Type: int64
+              Tag: 'json:"wh_id" binding:"required,WhID"'
+            - Name: Stage
+              Type: "*int64"
+              Tag: 'json:"stage" binding:"required,gte=0"'
+    do: sprut_access_service_client
+    responses:
+      - code: 200
+        data_example: |
+          {
+            "data": [
+              {
+                "part": 12,
+                "part_name": "name"
+              },
+              {
+                "part": 13,
+                "part_name": "name"
+              }
+            ]
+          }
+
+  - title: Получение селектора улиц на этаже
+    description: "Получение списка улиц по этажу для селектора в заявке"
+    api: post|api/stages/get_selector_streets_on_stage
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+            - Name: WhID
+              Type: int64
+              Tag: 'json:"wh_id" binding:"required,WhID"'
+            - Name: Stage
+              Type: int64
+              Tag: 'json:"stage" binding:"required,gte=0"'
+    do: sprut_access_service_client
+    responses:
+      - code: 200
+        data_example: |
+          {
+            "data": [
+              {
+                "id": 1, // street
+              },
+              {
+                "id": 2, // street
+              }
+            ]
+          }

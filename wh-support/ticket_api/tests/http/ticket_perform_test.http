@@ -1,0 +1,14 @@
+POST {{host}}/api/tickets/perform?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+    "ticket_id":  2,
+    "scenario_order_id": 1,
+    "ext": {
+        "office_id": {
+            "id": 318388,
+            "name": "Адыгея"
+        }
+    }
+}

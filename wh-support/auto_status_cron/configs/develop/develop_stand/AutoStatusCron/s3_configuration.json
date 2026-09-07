@@ -1,0 +1,8 @@
+{
+  "endpoint": "http://localhost:9000",
+  "access_key_id": "adminuser",
+  "secret_access_key": "testpassword",
+  "region": "ru",
+  "bucket_name": "wh-support",
+  "use_path_style": true
+}

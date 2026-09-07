@@ -1,0 +1,45 @@
+{
+  "urls": [
+    "http://localhost:8084"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "GetEmployeeSelfFullName": "/api/employee_self_full_name",
+    "GetEmployeesFullName": "/api/employees_full_name"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2,
+  "mock": {
+    "GetEmployeeSelfFullName": {
+      "get": {
+        "code": 200,
+        "response": {
+          "data": {
+            "employee_id": 123456,
+            "employee_name": "Иванов Иван Иванович"
+          }
+        }
+      }
+    },
+    "GetEmployeesFullName": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": [
+            {
+              "employee_id": 123456,
+              "employee_name": "Иванов Иван Иванович"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

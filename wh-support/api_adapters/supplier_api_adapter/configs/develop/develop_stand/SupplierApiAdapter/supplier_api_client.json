@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://localhost:8081"
+  ],
+  "apis": {
+    "get_supplier_info_by_nm_ids": "api/supplier_info_by_nm_ids"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

@@ -1,0 +1,31 @@
+title: Categories Api Proxy Adapter
+description: Прокси адаптер для сервиса категорий
+
+httpApis:
+  - title: Получение древа категорий по типу экшена
+    api: post|api/categories/get_categories_tree
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required"'
+    do: categories_api_client
+    responses:
+      - code: 200
+        description: "Древо категорий по типу экшена"
+      - code: 204
+        description: "У пользователя нет доступных категорий"
+
+  - title: Получение древа категорий для создания заявок
+    api: get|api/categories/get_categories_tree_for_create_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: categories_api_client
+    responses:
+      - code: 200
+        description: "Дерево категорий для создания заявок"

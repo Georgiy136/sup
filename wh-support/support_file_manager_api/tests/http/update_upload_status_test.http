@@ -1,0 +1,49 @@
+### Обновление статуса аплоада на READY (файл прошёл валидацию)
+POST http://{{host}}/api/uploads/update_upload_status
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 22,
+  "status": "READY"
+}
+
+### Обновление статуса аплоада на INVALID (файл не прошёл валидацию)
+POST http://{{host}}/api/uploads/update_upload_status
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 19,
+  "status": "INVALID"
+}
+
+### Обновление статуса аплоада на EXPIRED (истёк срок жизни)
+POST http://{{host}}/api/uploads/update_upload_status
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 19,
+  "status": "EXPIRED"
+}
+
+### Ошибка - несуществующий upload_id
+POST http://{{host}}/api/uploads/update_upload_status
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 999999999,
+  "status": "READY"
+}
+
+### Ошибка - недопустимый статус
+POST http://{{host}}/api/uploads/update_upload_status
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 10,
+  "status": "TRANSFERRED"
+}

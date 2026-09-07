@@ -1,0 +1,42 @@
+### Получение списка мест хранения по секциям - успешный запрос
+POST {{host}}/api/storageplaces/get_info_by_sections?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "office_id": 318388,
+  "wh_id": 1,
+  "street": 1,
+  "stage": 1,
+  "section_start": 1,
+  "section_end": 10
+}
+
+### 400 Некорректный диапазон секций - section_end меньше section_start
+POST {{host}}/api/storageplaces/get_info_by_sections?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "office_id": 318388,
+  "wh_id": 1,
+  "street": 1,
+  "stage": 1,
+  "section_start": 100,
+  "section_end": 50
+}
+
+### 400 Превышен лимит секций - разница между section_end и section_start >= 200
+POST {{host}}/api/storageplaces/get_info_by_sections?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "office_id": 318388,
+  "wh_id": 1,
+  "street": 1,
+  "stage": 1,
+  "section_start": 1,
+  "section_end": 201
+}
+

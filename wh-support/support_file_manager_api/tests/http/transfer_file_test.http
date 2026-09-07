@@ -1,0 +1,8 @@
+### Перенос файла из временного бакета в постоянный
+POST http://{{host}}/api/files/transfer
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 22
+}

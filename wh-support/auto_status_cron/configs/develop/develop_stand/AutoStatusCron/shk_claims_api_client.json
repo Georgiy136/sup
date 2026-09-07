@@ -1,0 +1,19 @@
+{
+  "urls": [
+    "http://localhost:8097"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "ShkClaimsShksRelease": "api/shks_release",
+    "GoodsValidation": "api/wrong_attachment/goods_validation"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2
+}

@@ -1,0 +1,68 @@
+title: FrontWbstorenvPlaceInfoApiProxyAdapter
+httpApis:
+  - title: Получение списка префиксов стикера
+    api: get|api/storage_place/sticker/prefixes
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_place_info_api_adapter_client
+    responses:
+      - code: 200
+        description:
+        data_example: |-
+          {
+            "data": [
+              {
+                "sticker_prefix": "$Pb",
+                "sticker_description": "МХ буферов раскладки (place buffer)"
+              },
+              {
+                "sticker_prefix": "$Pt",
+                "sticker_description": "МХ столов (place table)"
+              },
+              {
+                "sticker_prefix": "$Pm",
+                "sticker_description": "Основные МХ (place mezzanine)"
+              }
+            ]
+          }
+
+  - title: Проверка на существование типа МХ
+    api: post|api/storage_place/type/check
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_place_info_api_adapter_client
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: PlaceTypeName
+              Type: string
+              Tag: 'json:"value" binding:"required,lte=255"'
+    responses:
+      - code: 200
+        data_example: |-
+          {
+              "data": {
+                  "is_valid": false,
+                  "err_msg": "Уже существует тип МХ с таким названием."
+              }
+          }
+
+  - title: Получение наименований типов МХ для селектора
+    description: "Получение наименований типов мест хранений для селектора"
+    api: get|api/storage_place_types/get_names_storage_place_types
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_place_info_api_adapter_client
+    responses:
+      - code: 200
+        data_example: |-
+          {
+            "data": [
+              {
+                "place_type_id": 1,
+                "place_type_name": "test"
+              }
+            ]
+          }

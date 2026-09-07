@@ -1,0 +1,77 @@
+{
+  "urls": [
+    "http://localhost:8083"
+  ],
+  "apis": {
+    "BuildingsAdministrationGetApi": "/buildings_administration_get_api/api/wh.buildings.administration.get/v001",
+    "WhSprutenvAdministrationGetApi": "/wh_sprutenv_administration_get_api/api/sprutenv.administration.access.get/v001"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2,
+  "auth_for_apis": {
+    "BuildingsAdministrationGetApi": {
+      "type": "basic",
+      "basic_login": "admin",
+      "basic_password": "test",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    },
+    "WhSprutenvAdministrationGetApi": {
+      "type": "basic",
+      "basic_login": "admin",
+      "basic_password": "test",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  "mock": {
+    "BuildingsAdministrationGetApi": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": {
+            "api_callback": {
+              "apis": [
+                {
+                  "key": "wh.buildings.administration.building.get.by_office/v001",
+                  "urls": ["http://localhost:8080/wh.buildings.administration.building.get.by_office/v001"]
+                }
+              ],
+              "token": "mock-sprut-token",
+              "version": "v001"
+            }
+          }
+        }
+      }
+    },
+    "WhSprutenvAdministrationGetApi": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": {
+            "api_callback": {
+              "apis": [
+                {
+                  "key": "wh.sprutenv.office.stagepart.get.by_wh/v001",
+                  "urls": ["http://localhost:8080/wh.sprutenv.office.stagepart.get.by_wh/v001"]
+                },
+                {
+                  "key": "sprutenv.storageplaces.info.get.by_sections/external/v001",
+                  "urls": ["http://localhost:8080/sprutenv.storageplaces.info.get.by_sections/external/v001"]
+                },
+                {
+                  "key": "sprutenv.office.streets.get_by_stage/v001",
+                  "urls": ["http://localhost:8080/sprutenv.office.streets.get_by_stage/v001"]
+                }
+              ],
+              "token": "mock-sprut-token",
+              "version": "v001"
+            }
+          }
+        }
+      }
+    }
+  }
+}

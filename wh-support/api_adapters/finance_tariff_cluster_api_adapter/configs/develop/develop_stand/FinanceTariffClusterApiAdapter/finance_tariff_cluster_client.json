@@ -1,0 +1,18 @@
+{
+  "urls": [
+    "http://localhost:8082"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "prodtypes_get_all_with_parts": "api/prodtypes/get_all_with_parts",
+    "prodtype_part_get_all": "api/prod_type_part/get_all_part"
+  },
+  "response_timeout": "3s"
+}

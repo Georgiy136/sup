@@ -1,0 +1,7 @@
+{
+  "base_endpoint": "http://localhost:8091",
+  "access_key_id": "access_key",
+  "secret_access_key": "secret_access_key",
+  "region": "ru",
+  "use_path_style": true
+}

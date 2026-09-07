@@ -1,0 +1,47 @@
+### 200 Успешный запрос
+POST {{host}}/api/tickets/approve_v3?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+    "ticket_id": 17201,
+    "scenario_order_id": 0,
+    "files": {
+        "excel": [{
+            "file_id": 123,
+            "file_type": "application/vnd.ms-excel",
+            "file_size": 5284324
+        }]
+    },
+    "ext": {
+        "excel": [{
+            "file_id": 123,
+            "file_type": "application/vnd.ms-excel",
+            "file_size": 5284324
+        }]
+    }
+}
+
+### 400 Ошибка - 'application/excel' is not allowed in field 'excel'
+POST {{host}}/api/tickets/approve_v3?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 17201,
+  "scenario_order_id": 0,
+  "files": {
+    "excel": [{
+      "file_id": 123,
+      "file_type": "application/excel",
+      "file_size": 5284324
+    }]
+  },
+  "ext": {
+    "excel": [{
+      "file_id": 123,
+      "file_type": "application/excel",
+      "file_size": 5284324
+    }]
+  }
+}

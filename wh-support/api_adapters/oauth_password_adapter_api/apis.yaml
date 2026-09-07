@@ -1,0 +1,46 @@
+title: OAuth Password Adapter
+description: |
+  Адаптер KeyCloak для аутентификации по логину и паролю на альфе Wh Support
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors":  [
+      {
+        "error":  "error_code",
+        "message":  "error message to user",
+        "detail":  "some error details data"
+      }
+    ]
+  }
+  ```
+
+httpApis:
+  - title: Авторизация keycloak по логину и паролю (только для тестирования)
+    api: get|api/kk/auth/password
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|AuthKeycloakByPassword|employee_id
+    responses:
+      - code: 200
+        description: успешный результат
+        data_example: |-
+          {
+            "data": {
+              "id_token": "eyJhbGciOiJQQkVTMi1IUzUxMitBM...",
+              "access_token": "eyJhbGciOiJQQkVTMi1IUzUxMitBM...",
+              "access_token_expired_in": 1681227412,
+              "refresh_token": "eyJhbGciOiJQQkVTMi1IUzUxMitBM...",
+              "refresh_token_expired_in": 1681227412
+            }
+          }
+

@@ -1,0 +1,19 @@
+### Отмена загрузки файла
+POST http://{{host}}/api/uploads/cancel_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 11,
+  "file_id": 3
+}
+
+### Ошибка - несовпадение file_id
+POST http://{{host}}/api/uploads/cancel_upload?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "upload_id": 12345,
+  "file_id": 1
+}

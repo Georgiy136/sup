@@ -1,0 +1,31 @@
+### 200 Проверка доступности заявки для пользователя по подтабу (my_tickets_active, my_tickets_rejected, my_tickets_completed, my_tickets_favorite, work_tickets_forapprove, work_tickets_forbooking, work_tickets_forperform, work_tickets_rejected, work_tickets_completed)
+POST {{host}}/api/ticket/check_access_for_subtab?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_id": 10514,
+  "subtab": "my_tickets_active"
+}
+
+### 200 Получение всех доступных категорий и статусов для раздела "Мои заявки"
+GET {{host}}/api/categories/get_category_statuses_for_my_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json
+
+### 200 Получение всех доступных категорий и статусов для раздела "Рабочие заявки"
+GET {{host}}/api/categories/get_category_statuses_for_work_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json
+
+### 200 Получение заявок по списку ticket_ids и subtab
+POST {{host}}/api/tickets/get_tickets_by_ids?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_ids": [10514],
+  "subtab": "my_tickets_active"
+}

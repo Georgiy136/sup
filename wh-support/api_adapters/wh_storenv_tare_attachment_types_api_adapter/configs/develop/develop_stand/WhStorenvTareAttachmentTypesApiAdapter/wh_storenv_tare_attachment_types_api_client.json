@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "apis": {
+    "check_tare_state_by_id": "api/tare_state/check_by_state_id"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "5s"
+}

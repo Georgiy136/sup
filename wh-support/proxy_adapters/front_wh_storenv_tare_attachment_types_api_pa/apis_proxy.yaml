@@ -1,0 +1,19 @@
+title: Прокси-адаптер для инпутов сервиса заявок.
+description: Сервис проксирования запросов к апи для сервиса тар на сторенв.
+httpApis:
+  - title: Проверка нового статуса тары
+    api: POST|api/tare_state/check_by_state_id
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: StateID
+              Type: "string"
+              Tag: 'json:"value" binding:"required,len=3"'
+    do: wh_storenv_tare_attachment_types_api_adapter_client
+    responses:
+      - code: 204
+        description: новый статус тары валиден

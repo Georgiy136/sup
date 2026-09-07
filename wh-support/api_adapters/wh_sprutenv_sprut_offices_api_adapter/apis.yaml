@@ -1,0 +1,147 @@
+title: Адаптер для сервисов спрутов
+description: Кастомный прокси адаптер
+
+httpApis:
+  - title: Получение списка названий спрутов
+    api: get|api/wh.sprutenv.sprut_names.get/v001
+    auth_type: basic+e
+    do: CUSTOM|GetSprutNamesV001
+
+  - title: Проверка того, что выбранный офис существует
+    api: post|api/offices/check/office_exist
+    auth_type: basic+e
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"value" binding:"required,OfficeID"'
+    do: CUSTOM|CheckSprutOfficeExists|BODY
+    responses:
+      - code: 200
+        description: Офис существует.
+        data_example: |-
+          {
+            "data": true
+          }
+
+  - title: Проверка того, что выбранный офис существует (изменена структура ответа)
+    api: post|api/offices/check/office_exist_v2
+    auth_type: basic+e
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"value" binding:"required,OfficeID"'
+    do: CUSTOM|CheckSprutOfficeExistsV2|BODY
+    responses:
+      - code: 200
+        description: Офис существует.
+        data_example: |-
+          {
+            "data": {
+              "is_valid": true,
+              "err_msg": ""
+            }
+          }
+      - code: 200
+        description: Офис не существует.
+        data_example: |-
+          {
+            "data": {
+              "is_valid": false,
+              "err_msg": "Офис не существует"
+            }
+          }
+
+  - title: Проверка того, что выбранный офис не существует
+    api: post|api/offices/check/office_not_exist
+    auth_type: basic+e
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"value" binding:"required,OfficeID"'
+    do: CUSTOM|CheckSprutOfficeNotExists|BODY
+    responses:
+      - code: 200
+        description: Офис не существует.
+        data_example: |-
+          {
+            "data": true
+          }
+
+  - title: Проверка того, что выбранный офис не существует (изменена структура ответа)
+    api: post|api/offices/check/office_not_exist_v2
+    auth_type: basic+e
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"value" binding:"required,OfficeID"'
+    do: CUSTOM|CheckSprutOfficeNotExistsV2|BODY
+    responses:
+      - code: 200
+        description: Офис не существует.
+        data_example: |-
+          {
+            "data": {
+              "is_valid": true,
+              "err_msg": ""
+            }
+          }
+      - code: 200
+        description: Офис существует.
+        data_example: |-
+          {
+            "data": {
+              "is_valid": false,
+              "err_msg": "Офис уже существует"
+            }
+          }
+
+  - title: Получение офиса по ID
+    description: Получение данных офиса по ID с проверкой на существование в системе спрутов
+    api: post|api/offices/get_branch_office_by_id_with_sprut_check
+    auth_type: basic+e
+    body:
+      structure_name: Office
+      schema:
+        - type_name: Office
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: CUSTOM|GetBranchOfficeByIDWithSprutCheck|BODY
+    responses:
+      - code: 204
+        description: Офис существует в системе спрут либо офиса не существует
+        data_example: |-
+          {
+            "data": 
+              "value": null,
+              "is_valid": false,
+              "err_msg": "Офис уже существует в складской системе"
+          }
+      - code: 200
+        description: Данные офиса
+        data_example: |-
+          {
+            "data": 
+              "value": [
+                {"office_id": 507, "office_name": "Коледино", "type_point_name": "Склад"}
+              ],
+              "is_valid": true,
+              "err_msg": ""
+          }

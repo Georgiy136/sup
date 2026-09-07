@@ -1,0 +1,125 @@
+title: BandNotificationsBot
+description: |
+  API уведомлений Band/Mattermost.
+
+httpApis:
+  - title: Callback действия по заявке из Band
+    api: post|api/band/ticket/action
+    auth_type: without
+    body:
+      structure_name: BandPostActionRequest
+      schema:
+        - type_name: BandPostActionRequest
+          fields:
+            - Name: UserID
+              Type: string
+              Tag: 'json:"user_id" binding:"required,lte=30"'
+            - Name: ChannelID
+              Type: string
+              Tag: 'json:"channel_id" binding:"required,lte=30"'
+            - Name: PostID
+              Type: string
+              Tag: 'json:"post_id" binding:"required,lte=30"'
+            - Name: TriggerID
+              Type: string
+              Tag: 'json:"trigger_id" binding:"omitempty,lte=500"'
+            - Name: Context
+              Type: json.RawMessage
+              Tag: 'json:"context" binding:"required"'
+    do: CUSTOM|BandTicketAction|BODY
+    responses:
+      - code: 200
+        description: "Действие обработано"
+
+  - title: Callback формы отклонения заявки из Band
+    api: post|api/band/ticket/reject
+    auth_type: without
+    body:
+      structure_name: BandSubmitDialogRequest
+      schema:
+        - type_name: BandSubmitDialogRequest
+          fields:
+            - Name: CallbackID
+              Type: string
+              Tag: 'json:"callback_id" binding:"required,lte=30"'
+            - Name: State
+              Type: string
+              Tag: 'json:"state" binding:"required,lte=1000"'
+            - Name: UserID
+              Type: string
+              Tag: 'json:"user_id" binding:"required,lte=30"'
+            - Name: ChannelID
+              Type: string
+              Tag: 'json:"channel_id" binding:"required,lte=30"'
+            - Name: Submission
+              Type: json.RawMessage
+              Tag: 'json:"submission" binding:"required"'
+            - Name: Cancelled
+              Type: bool
+              Tag: 'json:"cancelled"'
+    do: CUSTOM|BandRejectDialog|BODY
+    responses:
+      - code: 200
+        description: "Отклонение обработано"
+
+  - title: Callback формы возврата заявки на статус из Band
+    api: post|api/band/ticket/return
+    auth_type: without
+    body:
+      structure_name: BandSubmitDialogRequest
+      schema:
+        - type_name: BandSubmitDialogRequest
+          fields:
+            - Name: CallbackID
+              Type: string
+              Tag: 'json:"callback_id" binding:"required,lte=30"'
+            - Name: State
+              Type: string
+              Tag: 'json:"state" binding:"required,lte=1000"'
+            - Name: UserID
+              Type: string
+              Tag: 'json:"user_id" binding:"required,lte=30"'
+            - Name: ChannelID
+              Type: string
+              Tag: 'json:"channel_id" binding:"required,lte=30"'
+            - Name: Submission
+              Type: json.RawMessage
+              Tag: 'json:"submission" binding:"required"'
+            - Name: Cancelled
+              Type: bool
+              Tag: 'json:"cancelled"'
+    do: CUSTOM|BandReturnToStatusDialog|BODY
+    responses:
+      - code: 200
+        description: "Возврат обработан"
+
+  - title: Callback формы дополнительной информации для действия из Band
+    api: post|api/band/ticket/additional_info
+    auth_type: without
+    body:
+      structure_name: BandSubmitDialogRequest
+      schema:
+        - type_name: BandSubmitDialogRequest
+          fields:
+            - Name: CallbackID
+              Type: string
+              Tag: 'json:"callback_id" binding:"required,lte=30"'
+            - Name: State
+              Type: string
+              Tag: 'json:"state" binding:"required,lte=1000"'
+            - Name: UserID
+              Type: string
+              Tag: 'json:"user_id" binding:"required,lte=30"'
+            - Name: ChannelID
+              Type: string
+              Tag: 'json:"channel_id" binding:"required,lte=30"'
+            - Name: Submission
+              Type: json.RawMessage
+              Tag: 'json:"submission" binding:"required"'
+            - Name: Cancelled
+              Type: bool
+              Tag: 'json:"cancelled"'
+    do: CUSTOM|BandAdditionalInfoDialog|BODY
+    responses:
+      - code: 200
+        description: "Дополнительная информация обработана"

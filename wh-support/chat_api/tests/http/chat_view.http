@@ -1,0 +1,26 @@
+### Просмотр чата пользователем
+POST {{host}}/api/chat/view?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 125
+}
+
+### 422 Заявка не существует
+POST {{host}}/api/chat/view?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 126
+}
+
+### 403 У пользователя нет прав
+POST {{host}}/api/chat/view?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 127
+}

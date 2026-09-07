@@ -1,0 +1,14 @@
+{
+  "Key": "sauron_clickhouse_db",
+  "Connection": "tcp://localhost:9000?database=direct_log&username=user&password=password&sslmode=disable&TimeZone=Europe/Moscow&connect_timeout=13",
+  "Driver": "clickhouse",
+  "MaxConnections": 4,
+  "MaxIdleConnections": 4,
+  "MaxOperationAttempts": 3,
+  "MaxOperationDeadlineSeconds": 12,
+  "TotalOperationsDeadlineSeconds": 36,
+  "ConnMaxLifetimeSeconds": 300,
+  "ConnMaxIdleTimeSeconds": 300,
+  "SkipPing": true,
+  "PingTimeoutMinutes": 1
+}

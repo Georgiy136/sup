@@ -1,0 +1,1103 @@
+title: Ticket Api Proxy Adapter
+description: Прокси адаптер для сервиса заявок
+
+httpApis:
+  - title: Создание заявки V2
+    do: ticket_api_client
+    description: "Создаёт новую заявку"
+    api: post|api/tickets/create
+    auth_type: keycloak
+    proxy_employee_id: true
+    responses:
+      - code: 200
+        description: "Заявка создана"
+
+  - title: Создание заявки V3
+    do: ticket_api_client
+    description: "Создаёт новую заявку"
+    api: post|api/ticket/create
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: TicketName
+              Type: "string"
+              Tag: 'json:"ticket_name" binding:"required,lte=300"'
+            - Name: InfoForCreate
+              Type: "json.RawMessage"
+              Tag: 'json:"info_for_create"'
+    responses:
+      - code: 200
+        description: "Заявка создана"
+
+  - title: Создание заявки V4
+    do: ticket_api_client
+    description: "Cоздание новой заявки с возможностью прикрепления файлов, доступных для данной категории"
+    api: post|api/ticket/create_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: TicketName
+              Type: "string"
+              Tag: 'json:"ticket_name" binding:"required,lte=300"'
+            - Name: Files
+              Type: "json.RawMessage"
+              Tag: 'json:"files"'
+            - Name: InfoForCreate
+              Type: "json.RawMessage"
+              Tag: 'json:"info_for_create"'
+    responses:
+      - code: 200
+        description: "Заявка создана"
+
+  - title: Отклонить созданную заявку (и все вложенные) V2
+    do: ticket_api_client
+    api: post|api/tickets/reject
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: RejectTicket
+      schema:
+        - type_name: RejectTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=300"'
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+
+  - title: Отклонить созданную заявку (и все вложенные) V3
+    description: "Отклонение заявки с возможностью прикрепления файлов, доступных для данной категории"
+    do: ticket_api_client
+    api: post|api/tickets/reject_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: RejectTicket
+      schema:
+        - type_name: RejectedFile
+          fields:
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+            - Name: FileType
+              Type: string
+              Tag: 'json:"file_type" binding:"required,min=1,max=100"'
+            - Name: FileSize
+              Type: int64
+              Tag: 'json:"file_size" binding:"required,gt=0"'
+            - Name: FileName
+              Type: string
+              Tag: 'json:"file_name" binding:"required,min=1,max=100"'
+        - type_name: RejectTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=300"'
+            - Name: RejectedFile
+              Type: RejectedFile
+              Tag: 'json:"rejected_file" binding:"omitempty,gt=0"'
+              IsSlice: true
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+
+  - title: Получить необходимую информацию для заведения тикета по данной категории и статусу V3
+    api: post|api/categories/get_by_status
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetCategoryInfo
+      schema:
+        - type_name: GetCategoryInfo
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,gt=0,max=3"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Информация о категории по статусу"
+
+  - title: Получить иерархическое дерево категорий
+    do: ticket_api_client
+    api: get|api/categories/info
+    auth_type: keycloak
+    proxy_employee_id: true
+    responses:
+      - code: 200
+        description: "Дерево категорий"
+
+  - title: Получить все заявки, которые создал сотрудник. Без информации по пройденным статусам и полям заявки.
+    api: get|api/tickets/created_by_employee
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Все созданные заявки данного сотрудника"
+      - code: 204
+        description: "У сотрудника нет заявок"
+
+  - title: Получить все данные по заявке. Также удаляет заявку из таблицы непросмотренных для сотрудника.
+    api: post|api/tickets/get_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Информация по заявке"
+      - code: 204
+        description: "Такой заявки не существует"
+
+  - title: Получить все заявки, созданные сотрудником (без истории статусов и подробных полей)
+    api: get|api/tickets/get_for_work_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Список заявок сотрудника"
+      - code: 204
+        description: "У сотрудника нет заявок"
+
+  - title: Получение рабочих заявок с проверкой внешних и внутренних доступов
+    api: get|api/tickets/get_work_tickets
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Рабочие заявки для подтверждения и исполнения"
+      - code: 204
+        description: "У сотрудника нет доступов к заявкам"
+
+  - title: Утвердить указанную заявку V2
+    api: post|api/tickets/approve_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Заявка подтверждена"
+
+  - title: Утвердить указанную заявку V3
+    description: Согласование заявки
+    api: post|api/tickets/approve_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+    responses:
+      - code: 204
+        description: "Заявка подтверждена"
+
+  - title: Утвердить указанную заявку  V3. Можно прикреплять файлы
+    description: Согласование заявки
+    api: post|api/tickets/approve_v3
+    proxy_employee_id: true
+    auth_type: keycloak
+    do: ticket_api_client
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'
+            - Name: Files
+              Type: "json.RawMessage"
+              Tag: 'json:"files"'
+    responses:
+      - code: 204
+        description: "Заявка подтверждена"
+
+  - title: Исполнить указанную заявку (перформ)
+    api: post|api/tickets/perform
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Заявка исполнена"
+
+  - title: Исполнить указанную заявку V2
+    description: Исполнение заявки
+    api: post|api/tickets/perform_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+    responses:
+      - code: 204
+        description: "Заявка исполнена"
+
+  - title: Исполнить указанную заявку V3. Можно прикреплять файлы
+    api: post|api/tickets/perform_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    body:
+      structure_name: PerformTicket
+      schema:
+        - type_name: PerformTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ScenarioOrderID
+              Type: "*int64"
+              Tag: 'json:"scenario_order_id" binding:"required,gte=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"'
+            - Name: Files
+              Type: "json.RawMessage"
+              Tag: 'json:"files"'
+    responses:
+      - code: 204
+        description: "Заявка исполнена"
+
+  - title: Получение информации по статусам категории
+    api: post|api/categories/statuses_info
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    body:
+      structure_name: GetCategoryStatusesInfo
+      schema:
+        - type_name: GetCategoryStatusesInfo
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+    responses:
+      - code: 200
+        description: "Информация о статусах категории"
+
+  - title: Взять в работу указанную заявку (забронировать для исполнения)
+    api: post|api/tickets/book
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: BookTicket
+      schema:
+        - type_name: BookTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"' 
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Заявка взята в работу"
+
+  - title: Взять в работу указанную заявку V2
+    description: Взять в работу указанную заявку (забронировать для исполнения)
+    api: post|api/tickets/book_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Заявка взята в работу"
+
+  - title: Снять с себя указанную заявку (снять бронь на исполнение)
+    api: post|api/tickets/unbook
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: UnbookTicket
+      schema:
+        - type_name: UnbookTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ExtVersion
+              Type: "*string"
+              Tag: 'json:"ext_version" binding:"omitempty,uuid4"' 
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "С заявки снята бронь на исполнение"
+
+  - title: Снять с себя указанную заявку V2
+    description: Снять с себя указанную заявку (снять бронь на исполнение)
+    api: post|api/tickets/unbook_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "С заявки снята бронь на исполнение"
+
+  - title: Редактирование статуса категории
+    api: post|api/categories/update_status
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Информация о категории"
+
+  - title: Создание категории
+    description: "Создание категории с возможностью выбора исполняемости заявки"
+    api: post|api/categories/add_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: CategoryName
+              Type: "string"
+              Tag: 'json:"category_name" binding:"required,min=1,max=100"'
+            - Name: ParentCategoryID
+              Type: "*int64"
+              Tag: 'json:"parent_category_id" binding:"omitempty,gt=0"'
+            - Name: IsActive
+              Type: "*bool"
+              Tag: 'json:"is_active" binding:"required"'
+    do: ticket_api_client
+
+  - title: Изменение или удаление категории
+    description: "Изменить или удалить существующую категорию"
+    api: post|api/categories/update_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0'
+            - Name: CategoryName
+              Type: "string"
+              Tag: 'json:"category_name" binding:"omitempty,min=1,max=100"'
+            - Name: ParentCategoryID
+              Type: "*int64"
+              Tag: 'json:"parent_category_id" binding:"omitempty,gt=0"'
+            - Name: IsDel
+              Type: "*bool"
+              Tag: 'json:"is_del" binding:"required"'
+            - Name: Icon
+              Type: "*string"
+              Tag: 'json:"icon" binding:"omitempty,min=1,max=25"'
+            - Name: Color
+              Type: "*string"
+              Tag: 'json:"color" binding:"omitempty,min=1,max=9"'
+    do: ticket_api_client
+
+  - title: Обновление наблюдаемых заявок
+    description: "Добавляет/удаляет заявку из наблюдаемых. При условии need_notification = TRUE сотрудник получает уведомления обо всех переходах статусов заявки"
+    api: post|api/tickets/update_favourite
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+
+  - title: Получения наблюдаемых заявок V2
+    description: "Возвращает наблюдаемые заявки сотрудника V2"
+    api: get|api/tickets/favourite_by_employee_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+
+  - title: Получения наблюдаемых заявок V2
+    description: "Получение наблюдаемых заявок, в которых учавствовал сотрудник на уровне подтверждения или исполнения"
+    api: get|api/tickets/favourite_by_employee_for_work_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+
+  - title: Копирование категории заявки
+    description: "АПИ копирует категорию заявки на уровне базы"
+    api: post|api/categories/copy_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required"'
+            - Name: ParentCategoryID
+              Type: int64
+              Tag: 'json:"parent_category_id" binding:"required"'
+    do: ticket_api_client
+
+  - title: Перенос настроек одной категории в другую
+    api: post|api/categories/copy_settings_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: SourceCategoryID
+              Type: int64
+              Tag: 'json:"source_category_id" binding:"required,gt=0"'
+            - Name: TargetCategoryID
+              Type: int64
+              Tag: 'json:"target_category_id" binding:"required,gt=0"'
+    do: ticket_api_client
+
+  - title: Перенос категории
+    description: "Перенести активную категорию в другую родительскую папку"
+    api: post|api/categories/category_move
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputData
+      schema:
+        - type_name: InputData
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: ParentCategoryID
+              Type: int64
+              Tag: 'json:"parent_category_id" binding:"required,gt=0"'
+    do: ticket_api_client
+
+  - title: Получение заявок по ids категорий
+    description: "Получить заявки по ids категорий"
+    api: post|api/admin/get_tickets_by_category_ids
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketsByCategoryIDs
+      schema:
+        - type_name: GetTicketsByCategoryIDs
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required"'
+            - Name: CategoryIDs
+              Type: int64
+              IsSlice: true
+              Tag: 'json:"category_ids" binding:"required,gt=0"'
+    do: ticket_api_client
+
+  - title: Получение списка заявок для центра
+    description: "Получение списка заявок для центра по ids категорий"
+    api: post|api/admin/get_center_tickets
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetCenterTickets
+      schema:
+        - type_name: GetCenterTickets
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required"'
+            - Name: CategoryIDs
+              Type: int64
+              IsSlice: true
+              Tag: 'json:"category_ids" binding:"required,min=1,max=5"'
+    do: ticket_api_client
+
+  - title: Получение массива ID тикетов
+    description: 'Получение массива ID тикетов для селектора центра заявок'
+    api: get|api/admin/get_center_ticket_ids
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+
+  - title: Получение тикетов по массиву ID
+    description: 'Получение тикетов по массиву ID для центра заявок'
+    api: post|api/admin/get_center_ticket_by_ticket_ids
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetCenterTicketByTicketIDs
+      schema:
+        - type_name: GetCenterTicketByTicketIDs
+          fields:
+            - Name: TicketIDs
+              Type: int64
+              Tag: 'json:"ticket_ids" binding:"required,gt=0,lte=100,dive,gt=0"'
+              IsSlice: true
+    do: ticket_api_client
+
+  - title: Получение детальной информации по заявке по её номеру с указанием типа действия
+    api: post|api/ticket/get_ticket_info_by_type_action
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketInfoByTypeAction
+      schema:
+        - type_name: GetTicketInfoByTypeAction
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeAction
+              Type: "string"
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Получение детальной информации по заявке для раздела "Центр заявок"
+    description: "Получение детальной информации заявки по её id для раздела 'Центр заявок'"
+    api: post|api/ticket/get_ticket_info_for_center
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketInfoForCenter
+      schema:
+        - type_name: GetTicketInfoForCenter
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeAction
+              Type: "string"
+              Tag: 'json:"type_action" binding:"required,min=3,max=50"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Получения детальной информации по заявке
+    description: '"Получение детальной информации заявки по её id для раздела "Мои заявки" на вкладках "Активные", "Отклоненные", "Выполненные", "Наблюдаемые"'
+    api: post|api/ticket/get_ticket_info_for_my_tickets
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketInfo
+      schema:
+        - type_name: GetTicketInfo
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+
+  - title: Поделиться заявкой
+    description: 'Поделиться моей заявкой для раздела "Мои заявки"'
+    api: post|api/ticket/share_my_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: ShareMyTicket
+      schema:
+        - type_name: ShareMyTicket
+          fields:
+            - Name: RecipientEmployeeID
+              Type: int64
+              Tag: 'json:"recipient_employee_id" binding:"required,EmployeeID"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Пользователь добавлен в наблюдатели"
+
+  - title: Поделиться рабочей заявкой
+    description: 'Поделиться рабочей заявкой для раздела "Рабочие заявки"'
+    api: post|api/ticket/share_work_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: ShareWorkTicket
+      schema:
+        - type_name: ShareWorkTicket
+          fields:
+            - Name: RecipientEmployeeID
+              Type: int64
+              Tag: 'json:"recipient_employee_id" binding:"required,EmployeeID"'
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,oneof=status_approve_category status_perform_category"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: "int64"
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Пользователь добавлен в наблюдатели"
+
+  - title: Удалить заявку из наблюдения
+    description: 'Удаление заявки из наблюдения для раздела "Мои заявки"'
+    api: post|api/ticket/delete_ticket_from_observables
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: DeleteTicketFromObservables
+      schema:
+        - type_name: DeleteTicketFromObservables
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: ticket_api_client
+    responses:
+      - code: 204
+        description: "Заявка удалена из наблюдения"
+
+  - title: Получение информации по заявке с проверкой доступа к категории
+    description: "Получение информации по заявке с проверкой доступа к категории. Также используется для передачи ссылки на заявку"
+    api: post|api/ticket/get_ticket_for_link
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketForLink
+      schema:
+        - type_name: GetTicketForLink
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Детальная информация по заявке"
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Получение списка заявок для раздела "Мои заявки"
+    description: "Получение списка заявок для раздела 'Мои заявки'"
+    api: get|api/tickets/get_my_tickets
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Список заявок сотрудника"
+      - code: 204
+        description: "У сотрудника нет заявок"
+
+  - title: Отклонение заявки для раздела "Мои заявки" и для раздела "Рабочие заявки" на вкладке "В работе"
+    description: "Отклонить заявку без проверки доступов"
+    api: post|api/tickets/reject_my_ticket_or_ticket_at_perform
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: RejectMyTicketOrTicketAtPerform
+      schema:
+        - type_name: RejectMyTicketOrTicketAtPerform
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=400"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+
+  - title: Отклонение заявки для раздела "Рабочие заявки" на вкладках "На согласовании" и "Готово к исполнению"
+    description: "Отклонить заявку с проверкой доступов"
+    api: post|api/tickets/reject_ticket_at_approve_or_book
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: RejectTicketAtApproveOrBook
+      schema:
+        - type_name: RejectTicketAtApproveOrBook
+          fields:
+            - Name: TypeAction
+              Type: string
+              Tag: 'json:"type_action" binding:"required,oneof=status_approve_category status_perform_category"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=400"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Заявка отклонена"
+      - code: 400
+        description: "Нет доступа к заявке"
+
+  - title: Запрос на отклонение заявки
+    do: ticket_api_client
+    api: post|api/tickets/request_to_reject_ticket
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: RequestToRejectTicket
+      schema:
+        - type_name: RequestToRejectTicket
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: RejectedComments
+              Type: string
+              Tag: 'json:"rejected_comments" binding:"required,max=400"'
+    responses:
+      - code: 204
+        description: "Отмена заявки запрошена"
+
+  - title: Запрос presigned URL на загрузку файла к заявке
+    do: ticket_api_client
+    api: post|api/files/get_upload_link
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: FileGetUploadLinkBody
+      schema:
+        - type_name: FileGetUploadLinkBody
+          fields:
+            - Name: MimeType
+              Type: string
+              Tag: 'json:"mime_type" binding:"required,min=1,max=150"'
+            - Name: FileSize
+              Type: int64
+              Tag: 'json:"file_size" binding:"required,gt=0"'
+            - Name: FileName
+              Type: string
+              Tag: 'json:"file_name" binding:"required,min=1,max=100"'
+    responses:
+      - code: 200
+        description: "Данные для загрузки файла"
+
+  - title: Подтверждение загрузки файла
+    do: ticket_api_client
+    api: post|api/files/complete_upload
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: FileCompleteUploadBody
+      schema:
+        - type_name: FileCompleteUploadBody
+          fields:
+            - Name: UploadID
+              Type: int64
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    responses:
+      - code: 204
+        description: "Загрузка подтверждена"
+
+  - title: Ссылка на скачивание файла заявки
+    do: ticket_api_client
+    api: post|api/files/download_url
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: FileDownloadURLBody
+      schema:
+        - type_name: FileDownloadURLBody
+          fields:
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    responses:
+      - code: 200
+        description: "Ссылка на скачивание"
+
+  - title: Отмена загрузки файла
+    do: ticket_api_client
+    api: post|api/files/cancel_upload
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: FileCancelUploadBody
+      schema:
+        - type_name: FileCancelUploadBody
+          fields:
+            - Name: UploadID
+              Type: int64
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: FileID
+              Type: int64
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    responses:
+      - code: 204
+        description: "Загрузка отменена"
+
+  - title: Обновление значения полей заявки
+    do: ticket_api_client
+    api: post|api/tickets/ticket_ext_update
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: UpdateTicketExt
+      schema:
+        - type_name: UpdateTicketExt
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Ext
+              Type: "json.RawMessage"
+              Tag: 'json:"ext"'
+    responses:
+      - code: 204
+        description: "Заявка отредактирована"
+
+  - title: Получение информации о поле заявки по категории и статусу
+    do: ticket_api_client
+    api: post|api/tickets/get_ticket_field_info_by_category_status
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketFieldInfoByCategoryStatus
+      schema:
+        - type_name: GetTicketFieldInfoByCategoryStatus
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: StatusID
+              Type: "*string"
+              Tag: 'json:"status_id" binding:"omitempty,min=1,max=3"'
+            - Name: DataName
+              Type: string
+              Tag: 'json:"data_name" binding:"required,lte=30"'
+    responses:
+      - code: 200
+        description: "Информация о поле заявки по категории и статусу"
+
+  - title: API для возвращения заявки на предыдущий статус
+    do: ticket_api_client
+    api: post|api/tickets/return_ticket_status
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: ReturnTicketStatus
+      schema:
+        - type_name: ReturnTicketStatus
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: ReturnStatusID
+              Type: "string"
+              Tag: 'json:"return_status_id" binding:"required,min=1,max=3"'
+            - Name: ReturnComment
+              Type: string
+              Tag: 'json:"return_comment" binding:"required,max=500"'
+    responses:
+      - code: 204
+        description: "Заявка возвращена на предыдущий статус"
+
+  - title: Проверка доступности заявки для пользователя по подтабу
+    api: post|api/ticket/check_access_for_subtab
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: CheckTicketAccessForSubTab
+      schema:
+        - type_name: CheckTicketAccessForSubTab
+          fields:
+            - Name: TicketID
+              Type: int64
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+            - Name: Subtab
+              Type: string
+              Tag: 'json:"subtab" binding:"required,min=1,max=50"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Результат проверки доступа"
+      - code: 400
+        description: "Некорректный subtab или body"
+
+  - title: Получение всех доступных категорий и статусов для раздела "Мои заявки"
+    api: get|api/categories/get_category_statuses_for_my_tickets
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Список категорий и статусов"
+      - code: 204
+        description: "Нет данных"
+
+  - title: Получение всех доступных категорий и статусов для раздела "Рабочие заявки"
+    api: get|api/categories/get_category_statuses_for_work_tickets
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Список категорий и статусов"
+      - code: 204
+        description: "Нет данных"
+
+  - title: Получение заявок по списку ticket_ids и subtab
+    api: post|api/tickets/get_tickets_by_ids
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: GetTicketsByIDs
+      schema:
+        - type_name: GetTicketsByIDs
+          fields:
+            - Name: TicketIDs
+              Type: int64
+              Tag: 'json:"ticket_ids" binding:"required,min=1,dive,gt=0"'
+              isSlice: true
+            - Name: Subtab
+              Type: string
+              Tag: 'json:"subtab" binding:"required,min=1,max=50"'
+    do: ticket_api_client
+    responses:
+      - code: 200
+        description: "Список заявок"
+      - code: 204
+        description: "Нет данных"
+      - code: 400
+        description: "Некорректный subtab или параметры"

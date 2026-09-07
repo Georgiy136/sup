@@ -1,0 +1,4 @@
+{
+  "backend": "inmemory",
+  "ttl": 300
+}

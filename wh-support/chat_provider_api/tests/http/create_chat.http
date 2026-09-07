@@ -1,0 +1,17 @@
+### 200 Создание чата по заявке
+POST {{host}}/api/chat?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 87228
+}
+
+### 422 Заявка не найдена
+POST {{host}}/api/chat?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 2280655652286
+}

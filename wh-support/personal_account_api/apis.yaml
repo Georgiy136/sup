@@ -1,0 +1,89 @@
+title: PersonalAccountApi
+description: |
+  Сервис для личного кабинета пользователя
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Получить информацию для личного кабинета пользователя V2
+    api: get|api/user/get_v2
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetPersonalAccountInfoV2|employee_id
+    responses:
+      - code: 200
+        description: "Информация о пользователе получена"
+        data_example: |-
+          {
+            "surname": "Пупкин",
+            "name": "Вова",
+            "patronymic": "Сергеевич",
+            "employee_id": 123,
+            "photo": "base64==" // Base64 PNG фото
+          }
+      - code: 422
+        description: "Ошибка получения информации о пользователе"
+        data_example: |-
+          {
+            "errors": [
+              {
+                "error": "internal.service_error",
+                "message": "internal service error",
+                "detail": "Error: the service is unavailable"
+              }
+            ]
+          }
+
+  - title: Получить список групп доступов пользователя
+    api: get|api/user/get_groups
+    auth_type: basic+e
+    query:
+      type_name: Query
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: uri:"employee_id" binding:"required,EmployeeID"
+    do: CUSTOM|GetGroupsByEmployee|employee_id
+    responses:
+      - code: 200
+        description: "Информация о группах пользователя получена"
+        data_example: |-
+          {
+            "data": [
+              {
+                "group_ids": [
+                  {
+                    "group_id": 1,
+                    "group_name": "Подтверждение заявок по созданию офиса"
+                  },
+                  {
+                    "group_id": 2,
+                    "group_name": "Исполнение заявок по добавлению офиса на спрут"
+                  }
+                ],
+                "employee_id": 2
+              }
+            ]
+          }

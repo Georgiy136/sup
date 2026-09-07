@@ -1,0 +1,8 @@
+POST {{host}}/api/categories/get_categories_tree?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "type_action": "action1"
+}

@@ -1,0 +1,21 @@
+{
+  "urls": [
+    "http://localhost:8084"
+  ],
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "apis": {
+    "CreateNewChat": "api/chat",
+    "CreatePost": "api/chat/create_post",
+    "GetChatByChatID":"api/chat/get_chat",
+    "GetHistoryChatByChatID":"api/chat/get_history_chat"
+  },
+  "response_timeout": "5s",
+  "retry_count": 2
+}

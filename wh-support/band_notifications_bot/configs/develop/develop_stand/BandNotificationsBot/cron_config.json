@@ -1,0 +1,10 @@
+{
+  "ticket_notifications_cron": {
+    "cron_time_sleep_on_error": "10s"
+  },
+  "chat_notifications_cron": {
+    "cron_time_sleep_on_error": "10s",
+    "cron_time_sleep_on_ok": "5s",
+    "cron_time_sleep_on_no_data": "5s"
+  }
+}

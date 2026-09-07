@@ -1,0 +1,21 @@
+### Получение селектора branch офисов (тест - офис не найден, русский язык)
+POST {{host}}/api/offices/get_selector_branch_offices?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+X-WBWH-Language:
+
+{
+  "office_id": 1
+}
+
+### Получение селектора branch офисов (тест - офис не найден, английский язык - локализация)
+POST {{host}}/api/offices/get_selector_branch_offices?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+X-WBWH-Language: en
+
+{
+  "office_id": 1
+}

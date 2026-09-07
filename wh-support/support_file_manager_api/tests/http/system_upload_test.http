@@ -1,0 +1,15 @@
+### 200 Загрузка TXT файла из сервиса
+POST {{host}}/api/internal/files/upload_file
+Authorization: Basic {{basicAuth}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="entity_type"
+
+SYSTEM_UPLOAD
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test_document.txt"
+Content-Type: text/plain
+
+test file content
+--WebAppBoundary--

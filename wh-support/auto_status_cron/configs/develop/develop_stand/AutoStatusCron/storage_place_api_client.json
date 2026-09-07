@@ -1,0 +1,111 @@
+{
+  "urls": [
+    "http://localhost:8083"
+  ],
+  "apis": {
+    "StoragePlaceDelete": "api/storageplace_management.storageplace.delete/v001",
+    "StoragePlaceCreate": "api/storageplace_management.storageplace.create/v001",
+    "StoragePlaceDeleteFromInactiveWh": "api/storageplace_management.storageplace.from_inactive_wh.delete/v001",
+    "StoragePlaceGoodsExportTaskCreate": "api/storageplace_management.storageplace.goods_list_by_wh.create/v001",
+    "StoragePlaceGetGoodsListByWh": "api/storageplace_management.storageplace.goods_list_by_wh.get/v001",
+    "StoragePlaceDeleteGoodsByWh": "api/storageplace_management.storageplace.goods_list_by_wh.delete/v001"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "response_timeout": "10s",
+  "retry_count": 2,
+  "mock": {
+    "StoragePlaceDelete": {
+      "post": {
+        "code": 422,
+        "response": {
+          "errors": [
+            {
+              "error": "storageplace.std.err_biz.storageplace.delete_failed",
+              "message": "Не удалось удалить места хранения",
+              "detail": "МХ: А-01-01, А-01-02, А-01-03",
+              "message_values": {
+                "office_id": "123",
+                "place_count": "3"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "StoragePlaceDeleteFromInactiveWh": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": {
+            "wh_id": 508,
+            "status": "ERR",
+            "notdeleted_places": [
+              {
+                "reason": "STK",
+                "place_ids": [
+                  9988776602
+                ],
+                "is_stock": true,
+                "places_qty": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    "StoragePlaceGoodsExportTaskCreate": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": {
+            "wh_id": 508,
+            "status": "CMP"
+          }
+        }
+      }
+    },
+    "StoragePlaceGetGoodsListByWh": {
+      "post": {
+        "code": 200,
+        "response": {
+          "data": [
+            {
+              "goods_id": 1,
+              "place_id": 1,
+              "sku_id": 1,
+              "nm_id": 1
+            },
+            {
+              "goods_id": 2,
+              "place_id": 2,
+              "sku_id": 2,
+              "nm_id": 2
+            },
+            {
+              "goods_id": 3,
+              "place_id": 3,
+              "sku_id": 4
+            },
+            {
+              "goods_id": 5,
+              "place_id": 5
+            }
+          ]
+        }
+      }
+    },
+    "StoragePlaceDeleteGoodsByWh": {
+      "post": {
+        "code": 200,
+        "response": {}
+      }
+    }
+  }
+}

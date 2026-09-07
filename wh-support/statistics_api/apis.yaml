@@ -1,0 +1,66 @@
+title: StatisticsApi
+description: |
+  Сервис статистики
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Получение статистики V2
+    description: "Получение статистики new по табам V"
+    api: get|api/statistics/new_by_employee_v2
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetStatisticsByEmployeeV2|employee_id
+
+  - title: Получение статистики по заявкам
+    description: "Получение статистики по заявкам"
+    api: get|api/statistics/get_ticket_statistics
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    do: CUSTOM|GetTicketStatistics|employee_id
+    responses:
+      - code: 200
+        description: "Статистика по заявкам"
+        data_example: |-
+          {
+            "data": {
+              "my_tickets": 373,
+              "work_tickets": 7,
+              "my_tickets_active": 7,
+              "my_tickets_rejected": 186,
+              "my_tickets_completed": 179,
+              "my_tickets_favourite": 1,
+              "work_tickets_forapprove": 0,
+              "work_tickets_forbooking": 3,
+              "work_tickets_forperform": 4
+            }
+          }
+      - code: 204
+        description: "У сотрудника нет доступов к категориям"

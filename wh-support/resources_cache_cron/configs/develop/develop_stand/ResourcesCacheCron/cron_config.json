@@ -1,0 +1,14 @@
+{
+  "internal_actions.changes": {
+    "cron_time_sleep_on_no_data": "5s",
+    "cron_time_sleep_on_error": "5s"
+  },
+  "employee_action_groups.changes": {
+    "cron_time_sleep_on_no_data": "5s",
+    "cron_time_sleep_on_error": "5s"
+  },
+  "access_policy.changes": {
+    "cron_time_sleep_on_no_data": "5s",
+    "cron_time_sleep_on_error": "5s"
+  }
+}

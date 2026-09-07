@@ -1,0 +1,33 @@
+### Получение токена для подключения к чату
+GET {{host}}/api/v1/realtime/token?employee_id=111
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+### Проверка прав на подписку к каналу
+POST {{host}}/internal/centrifugo/subscribe
+Content-Type: application/json
+Authorization: Basic {{basicAuth}}
+
+{
+  "channel": "ticket:12345",
+  "user": "111"
+}
+
+### Проверка прав на подписку с невалидным каналом
+POST {{host}}/internal/centrifugo/subscribe
+Content-Type: application/json
+Authorization: Basic {{basicAuth}}
+
+{
+  "channel": "invalid-channel",
+  "user": "111"
+}
+
+### Обновление токена чата
+POST {{host}}/internal/centrifugo/refresh
+Content-Type: application/json
+Authorization: Basic {{basicAuth}}
+
+{
+  "user": "111"
+}

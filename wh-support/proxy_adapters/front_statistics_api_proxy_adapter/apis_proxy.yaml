@@ -1,0 +1,22 @@
+title: StatistisApiProxyAdapter
+description: Прокси адаптер для личного кабинета сервиса заявок
+
+httpApis:
+  - title: Получение статистики V2
+    description: "Получение статистики new по табам"
+    api: get|api/statistics/new_by_employee_v2
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: statistics_api_client
+
+  - title: Получение статистики по заявкам
+    description: "Получение статистики по заявкам"
+    api: get|api/statistics/get_ticket_statistics
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: statistics_api_client
+    responses:
+      - code: 200
+        description: "Статистика по заявкам"
+      - code: 204
+        description: "У сотрудника нет доступов к категориям"

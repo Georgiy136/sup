@@ -1,0 +1,33 @@
+title: FrontEmployeeSearchApiProxyAdapter
+description: Прокси адаптер сервиса поиска информации о сотрудниках по части ФИО
+httpApis:
+  - title: Получение информации о сотрудниках по части ФИО
+    description: Поиск сотрудника по части ФИО
+    api: get|/api/employee/search
+    auth_type: keycloak
+    proxy_employee_id: true
+    query:
+      type_name: Query
+      fields:
+        - Name: Name
+          Type: string
+          Tag: 'uri:"name" binding:"required,max=500"'
+    do: "employee_search_api_client"
+    responses:
+      - code: 200
+        description: успешный результат, в поле data возвращается объект с информацией о сотруднике
+        data_example: |
+          {
+            "data": [
+            {
+              "employee_id": 83082,
+              "employee_name": "Никишкин Михаил Дмитриевич",
+            },
+            {
+              "employee_id": 12345,
+              "employee_name": "Никитин Никита Никитович",
+            }
+            ]
+          }
+      - code: 204
+        description: Cотрудник не найден

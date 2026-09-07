@@ -1,0 +1,50 @@
+GET {{host}}/api/groups/categories_with_groups?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json
+
+###
+POST {{host}}/api/groups/add_group_to_category?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "category_id": 66,
+    "typeaction_id": "status_approve_category",
+    "group_id": 146
+}
+
+###
+POST {{host}}/api/groups/update_group_for_category?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "category_id": 66,
+    "typeaction_id": "status_approve_category",
+    "group_id": 146
+}
+
+###
+POST {{host}}/api/groups/delete_group_to_category?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "category_id": 66,
+    "typeaction_id": "status_approve_category",
+    "group_id": 146
+}
+
+### Изменение имени для группы доступа
+POST {{host}}/api/groups/update_group_name?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "group_id": 55,
+    "group_name": "Тестовая группа на перформ"
+}

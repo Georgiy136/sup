@@ -1,0 +1,17 @@
+{
+  "urls": [
+    "http://cargo-aggregator.logistics.k8s.stage-dm"
+  ],
+  "apis": {
+    "CargoCreateAPI": "/api/cargo/v1/wh-support/v1/cargos",
+    "CargoGetStatusAPI": "/api/cargo/v1/wh-support/v1/cargo-by-ids"
+  },
+  "auth": {
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "token"
+    }
+  },
+  "response_timeout": "100s",
+  "retry_count": 2
+}

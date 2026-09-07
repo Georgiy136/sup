@@ -1,0 +1,21 @@
+POST {{host}}/api/category/info?employee_id={{employee_id}}&category_id=1
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "status_id": "ANA"
+}
+
+###
+
+POST {{host}}/api/category/info?employee_id={{employee_id}}&category_id=1
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "status_id": ""
+}
+
+###

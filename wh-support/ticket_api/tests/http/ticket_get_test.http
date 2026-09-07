@@ -1,0 +1,91 @@
+###
+POST {{host}}/api/admin/get_tickets_by_category_ids?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "type_action": "status_approve_category",
+  "category_ids": [95, 88, 100]
+}
+
+### Получение списка заявок для центра по ids категорий
+POST {{host}}/api/admin/get_center_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "type_action": "status_approve_category",
+  "category_ids": [95, 88, 100, 185]
+}
+
+### Получение детальной информации по заявке с типом действия view_info_category
+POST {{host}}/api/ticket/get_ticket_info_by_type_action?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 54264,
+  "category_id": 5,
+  "type_action": "view_info_category",
+  "status_id": "ETA"
+}
+
+### Получение детальной информации по заявке с типом действия status_approve_category
+POST {{host}}/api/ticket/get_ticket_info_by_type_action?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 10514,
+  "category_id": 281,
+  "type_action": "status_approve_category",
+  "status_id": "ETA"
+}
+
+### Получить список рабочих заявок работника
+GET {{host}}/api/tickets/get_work_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json
+
+### Получение детальной информации заявки для раздела "Рабочие заявки"
+POST {{host}}/api/ticket/get_ticket_info_for_work_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 10514,
+  "category_id": 281
+}
+
+### Получение списка заявок для раздела "Мои заявки"
+GET {{host}}/api/tickets/get_my_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Accept: application/json
+
+### Получения детальной информации по заявке по ее номеру для раздела «Мои заявки»
+POST {{host}}/api/ticket/get_ticket_info?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "ticket_id": 10514
+}
+
+### Получение списка заявок доступных пользователю для просмотра в "Центре заявок"
+GET {{host}}/api/admin/get_view_tickets?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+### Получение детальной информации по заявке для раздела "Центр заявок"
+POST http://localhost:8080/api/ticket/get_ticket_info_for_center?employee_id=1029871
+Authorization: Basic YWRtaW46dGVzdA==
+Content-Type: application/json
+
+{
+  "ticket_id": 10611,
+  "category_id": 185,
+  "type_action": "view_info_category",
+  "status_id": "ETA"
+}

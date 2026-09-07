@@ -1,0 +1,19 @@
+title:  FrontChatAuthProxyAdapter
+description: |
+  Proxy для интеграции авторизации чата.
+
+httpApis:
+  - title: Получение JWT-токена для подключения к чату
+    api: get|api/v1/realtime/token
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: chat_auth_service_client
+    responses:
+      - code: 200
+        description: JWT токен для подключения к чату
+        data_example: |-
+          {
+            "data": {
+              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV..."
+            }
+          }

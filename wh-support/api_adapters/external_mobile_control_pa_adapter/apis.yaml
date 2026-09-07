@@ -1,0 +1,37 @@
+title: ExternalMobileControlPAAdapter
+description: Сервис проксирования запросов к Proxy Adapter MobileDeviceControlApi для получения информации по ТСД и планшетам.
+
+httpApis:
+  - title: Проверка существования устройства в сервисе контроля ТСД и планшетов
+    api: POST|api/mobile_control/check_device
+    auth_type: basic+e
+    body:
+      structure_name: BodyStruct
+      schema:
+        - type_name: BodyStruct
+          fields:
+            - Name: DeviceSerialNumber
+              Type: string
+              Tag: 'json:"value" binding:"required,max=36"'
+    do: CUSTOM|CheckDevice|BODY;employee_id
+    responses:
+      - code: 200
+        description: Устройство найдено
+        data_example: |
+          {
+            "data": 
+              "value": [
+                {"device_type_id": "PDT", "device_serial_number": "SN1234567890988878"}
+              ],
+              "is_valid": true,
+              "err_msg": ""
+          }
+      - code: 204
+        description: Устройство НЕ найдено
+        data_example: |-
+          {
+            "data": 
+              "value": null,
+              "is_valid": false,
+              "err_msg": "Устройство SN1234567890988877 не существует."
+          }

@@ -1,0 +1,22 @@
+{
+  "urls": [
+    "http://localhost:8082"
+  ],
+  "apis": {
+    "support.tickets.changes": "/api/support_tickets_changes",
+    "support.tickets.categories": "/api/support_tickets_categories",
+    "support.tickets.category.statuses": "/api/support_tickets_category_statuses",
+    "support.tickets.groups": "/api/support_tickets_groups",
+    "support.tickets.scenarios": "/api/support_tickets_scenarios"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test",
+    "headers": {
+      "Content-Type": "application/x-protobuf"
+    }
+  },
+  "response_timeout": "5s",
+  "retry_count": 3
+}

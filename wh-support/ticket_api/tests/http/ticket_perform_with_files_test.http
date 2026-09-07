@@ -1,0 +1,22 @@
+POST {{host}}/api/tickets/perform_v2?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+    "ticket_id": 2,
+    "scenario_order_id": 0,
+    "files": {
+        "test_file": [{
+            "file_id": 123,
+            "file_type": "application/excel",
+            "file_size": 5284324
+        }]
+    },
+    "ext": {
+        "test_file": [{
+            "file_id": 123,
+            "file_type": "application/excel",
+            "file_size": 5284324
+        }]
+    }
+}

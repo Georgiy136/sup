@@ -1,0 +1,3 @@
+### Получение списка аплоадов для валидации
+GET http://{{host}}/api/uploads/uploads_for_validation
+Authorization: Basic {{basicAuth}}

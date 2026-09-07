@@ -1,0 +1,123 @@
+title: Прокси-адаптер для сервиса заявок.
+description: Сервис проксирования запросов к апи для получения списка всех складских офисов и получения селектора спрутов.
+httpApis:
+  - title: Получение списка всех складских офисов
+    description: 'Выводит список складских офисов. Можно выводить удаленные.'
+    api: get|api/offices/list
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение селектора офисов
+    description: 'Выводит список офисов в формате селектора для фронта.'
+    api: get|api/offices/get_selector
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение селектора спрутовых офисов с фильтрацией по country_code
+    description: 'Выводит список офисов, отфильтрованных по country_code, в формате селектора для фронта.'
+    api: get|api/offices/get_selector_filtered_by_country_code
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение селектора блоков по офису
+    description: 'Выводит список блоков по офису в формате селектора для фронта.'
+    api: post|api/wh/get_selector
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: OfficeInfo
+      schema:
+        - type_name: OfficeInfo
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение селектора branch офисов без удаленных офисов
+    api: post|api/offices/get_selector_branch_offices
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: OfficeInfo
+      schema:
+        - type_name: OfficeInfo
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение селектора блоков по офису без учета удаленных
+    description: 'Выводит список блоков по офису без учета удаленных в формате селектора для фронта.'
+    api: post|api/wh/get_selector_without_del
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: OfficeInfo
+      schema:
+        - type_name: OfficeInfo
+          fields:
+            - Name: OfficeID
+              Type: int64
+              Tag: 'json:"office_id" binding:"required,OfficeID"'
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Проверка аббревиатуры блока
+    description: 'Проверяет, что аббревиатура блока валидна и не существует'
+    api: post|api/wh/check_new_abbreviation
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: PlaceNamePrefix
+              Type: string
+              Tag: 'json:"value" binding:"required,gt=0,lte=5"'
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Проверка нового названия блока
+    description: 'Проверяет, что название блока валидно и не существует'
+    api: post|api/wh/check_new_name
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: WhName
+              Type: string
+              Tag: 'json:"value" binding:"required,gt=0,lte=128"'
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение списка всех процессов
+    api: get|api/business_process/get_all
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Получение списка всех статусов
+    api: get|api/shk_state/get_all
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: wbstorenv_warehouse_info_api_adapter_client
+
+  - title: Проверка существования статуса
+    api: post|api/shk_state/check_by_id
+    auth_type: keycloak
+    proxy_employee_id: true
+    body:
+      structure_name: InputStruct
+      schema:
+        - type_name: InputStruct
+          fields:
+            - Name: StateID
+              Type: string
+              Tag: json:"value" binding:"required,len=3"
+    do: wbstorenv_warehouse_info_api_adapter_client

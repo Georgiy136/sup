@@ -1,0 +1,15 @@
+{
+  "Key": "support_pgx",
+  "Connections": [
+    "host=wh-px-support-alpha-01.dm.wb.ru port=5432 user= password= dbname=mashhch_test sslmode=disable TimeZone=Europe/Moscow connect_timeout=10"
+  ],
+  "Driver": "pgx",
+  "MaxConnections": 5,
+  "MaxIdleConnections": 5,
+  "MaxOperationAttempts": 5,
+  "MaxOperationDeadline": "8s",
+  "TotalOperationsDeadline": "10s",
+  "ConnMaxLifetime": "10m",
+  "ConnMaxIdleTime": "10m",
+  "NeedPing": true
+}

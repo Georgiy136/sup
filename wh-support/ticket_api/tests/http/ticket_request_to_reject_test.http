@@ -1,0 +1,10 @@
+### Запрос на отклонение заявки
+POST {{host}}/api/tickets/request_to_reject_ticket?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_id": 12345,
+  "rejected_comments": "Отклонение заявки"
+}

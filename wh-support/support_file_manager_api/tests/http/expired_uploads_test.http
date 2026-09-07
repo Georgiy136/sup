@@ -1,0 +1,3 @@
+### Получение аплоадов с истекшим сроком жизни
+GET http://{{host}}/api/uploads/expired_uploads
+Authorization: Basic {{basicAuth}}

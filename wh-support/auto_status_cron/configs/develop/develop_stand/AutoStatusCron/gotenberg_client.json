@@ -1,0 +1,14 @@
+{
+  "urls": [
+    "http://localhost:3000"
+  ],
+  "apis": {
+    "ConvertDocxToPdf": "forms/libreoffice/convert"
+  },
+  "auth": {
+    "type": "basic",
+    "basic_login": "admin",
+    "basic_password": "test"
+  },
+  "response_timeout": "30s"
+}

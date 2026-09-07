@@ -1,0 +1,253 @@
+title: Front Employee Group Api Proxy Adapter
+description: Прокси адаптер для сервиса групп доступов
+
+httpApis:
+  - title: Создание группы доступа
+    api: post|api/groups/create
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: CreateGroup
+      schema:
+        - type_name: CreateGroup
+          fields:
+            - Name: GroupName
+              Type: string
+              Tag: 'json:"group_name" binding:"required,max=100"'
+            - Name: ExternalAction
+              Type: "*string"
+              Tag: 'json:"external_action" binding:"omitempty,max=100"'
+    responses:
+      - code: 200
+        description: "Группа создана"
+      - code: 422
+        description: "Ошибка создания группы"
+
+  - title: Редактирование внешнего экшена у группы доступа
+    api: post|api/groups/update_external_action
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: UpdateExternalActionGroup
+      schema:
+        - type_name: UpdateExternalActionGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: ExternalAction
+              Type: "*string"
+              Tag: 'json:"external_action" binding:"omitempty,max=100"'
+    responses:
+      - code: 200
+        description: "Группа обновлена"
+      - code: 422
+        description: "Ошибка обновления группы"
+
+  - title: Удаление группы доступа
+    api: post|api/groups/delete
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: DeleteGroup
+      schema:
+        - type_name: DeleteGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    responses:
+      - code: 204
+        description: "Группа удалена"
+      - code: 422
+        description: "Ошибка удаления группы"
+
+  - title: Получение списка всех групп доступов
+    api: get|api/groups/get_all
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    responses:
+      - code: 200
+        description: "Список несистемных групп пользователей"
+
+  - title: Получение списка сотрудников по группе доступа
+    api: post|api/groups/get_employees
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: GetEmployeesByGroup
+      schema:
+        - type_name: GetEmployeesByGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    responses:
+      - code: 200
+        description: "Список пользователей из указанной группы"
+      - code: 204
+        description: "В группе нет пользователей"
+      - code: 422
+        description: "Ошибка получения списка пользователей"
+
+  - title: Получение списка групп доступов сотрудника
+    api: post|api/groups/get_groups_by_employee
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    responses:
+      - code: 200
+        description: "Список групп, в которых состоит сотрудник"
+
+  - title: Добавление сотрудника в группу доступа
+    api: post|api/groups/add_employee
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: AddEmployeeToGroup
+      schema:
+        - type_name: AddEmployeeToGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+    responses:
+      - code: 204
+        description: "Пользователь добавлен в группу"
+      - code: 422
+        description: "Ошибка добавления пользователя в группу"
+
+  - title: Удаление сотрудника из группы доступа
+    api: post|api/groups/delete_employee
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: DeleteEmployeeFromGroup
+      schema:
+        - type_name: DeleteEmployeeFromGroup
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: EmployeeID
+              Type: int64
+              Tag: 'json:"employee_id" binding:"required,EmployeeID"'
+    responses:
+      - code: 204
+        description: "Пользователь удален из группы"
+      - code: 422
+        description: "Ошибка удаления пользователя из группы"
+
+  - title: Получение списка категорий и групп доступов для каждой категории
+    api: get|api/groups/categories_with_groups
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    responses:
+      - code: 200
+        description: "Список категорий и групп доступов для каждой категории"
+
+  - title: Добавление группы доступа в категорию
+    api: post|api/groups/add_group_to_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: AddGroupToCategory
+      schema:
+        - type_name: AddGroupToCategory
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required,min=5,max=50"'
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    responses:
+      - code: 200
+        description: "Группа добавлена в категорию"
+      - code: 422
+        description: "Такая связка категории с группой уже существует"
+
+  - title: Редактирование группы доступа по категории и типу действия
+    api: post|api/groups/update_group_for_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: UpdateGroupForCategory
+      schema:
+        - type_name: UpdateGroupForCategory
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required"'
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    responses:
+      - code: 200
+        description: "Редактирование группы доступа успешно"
+      - code: 422
+        description: "Такая связка категории с группой уже существует"
+
+  - title: Удаление группы доступа в категории
+    api: post|api/groups/delete_group_to_category
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: DeleteGroupToCategory
+      schema:
+        - type_name: DeleteGroupToCategory
+          fields:
+            - Name: CategoryID
+              Type: int64
+              Tag: 'json:"category_id" binding:"required,gt=0"'
+            - Name: TypeActionID
+              Type: string
+              Tag: 'json:"typeaction_id" binding:"required,min=5,max=50"'
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+    responses:
+      - code: 200
+        description: "Связь группы и категории удалена"
+      - code: 422
+        description: "Такая связка категории с группой уже существует"
+
+  - title: Изменение имени для группы доступа
+    api: post|api/groups/update_group_name
+    auth_type: keycloak
+    proxy_employee_id: true
+    do: employee_group_api_client
+    body:
+      structure_name: UpdateGroupName
+      schema:
+        - type_name: UpdateGroupName
+          fields:
+            - Name: GroupID
+              Type: int64
+              Tag: 'json:"group_id" binding:"required,LteInt32"'
+            - Name: GroupName
+              Type: string
+              Tag: 'json:"group_name" binding:"required,max=100"'
+    responses:
+      - code: 200
+        description: "Название группы изменено"

@@ -1,0 +1,8 @@
+### 200 Скачивание файла
+POST {{host}}/api/chat/download_file?employee_id={{employee_id}}
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+  "file_id": "toqrfphx47n8j8buh9xpebqiuo"
+}

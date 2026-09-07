@@ -1,0 +1,562 @@
+title: SupportFileManagerApi
+description: |
+  Сервис управления файлами в S3
+
+  ### Допустимые MIME типы файлов:
+  - Документы: application/pdf, application/msword, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv,  text/plain и т.д. (до 15 МБ)
+  - Изображения: image/jpeg, image/png (до 15 МБ)
+  - Видео: video/mp4, video/quicktime (до 100 МБ)
+
+  ### Жизненный цикл файла:
+  1. InitUpload - инициализация загрузки, получение presigned URL
+  2. Клиент загружает файл по presigned URL
+  3. ConfirmUpload - подтверждение загрузки (статус VALIDATING)
+  4. Валидация файла (внешний процесс)
+  5. MarkUploadReady или InvalidateUpload - результат валидации
+  6. TransferFile - перенос в постоянное хранилище
+  7. GetDownloadURL - получение ссылки на скачивание
+
+  ### Стандартные ошибки, общие для всех API:
+  - статус 400, ошибка валидации входных параметров;
+  - статус 401, ошибка проверки авторизации запроса;
+  - статус 403, нет прав доступа;
+  - статус 422, ошибка бизнес-логики;
+  - статус 500, ошибка сервиса.
+
+  Тело ошибок представлено в формате
+  ```json
+  {
+    "errors": [
+      {
+        "error": "error_code",
+        "message": "error message to user",
+        "detail": "some error details data"
+      }
+    ]
+  }
+  ```
+httpApis:
+  - title: Инициализация загрузки файла
+    description: |
+      Инициализирует загрузку файла: валидирует параметры, резервирует ID,
+      создает запись в БД и генерирует presigned URL для загрузки во временное хранилище.
+    api: post|api/uploads/init_upload
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: InitUploadRequest
+      schema:
+        - type_name: InitUploadRequest
+          fields:
+            - Name: FileName
+              Type: "string"
+              Tag: 'json:"file_name" binding:"required,min=1,max=100"'
+            - Name: FileSize
+              Type: "int64"
+              Tag: 'json:"file_size" binding:"required,gt=0"'
+            - Name: MimeType
+              Type: "string"
+              Tag: 'json:"mime_type" binding:"required,min=1,max=150"'
+            - Name: EntityType
+              Type: "string"
+              Tag: 'json:"entity_type" binding:"required,min=1,max=25"'
+            - Name: EntityData
+              Type: "json.RawMessage"
+              Tag: 'json:"entity_data" binding:"omitempty"'
+    do: CUSTOM|InitUpload|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Данные для загрузки файла"
+        data_example: |-
+          {
+            "data": {
+              "upload_id": 9,
+              "file_id": 13,
+              "upload_url": "http://localhost:9000/wh-support/tmp/45/c4/9?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credent...",
+              "method": "PUT",
+              "object_key": "tmp/45/c4/9",
+              "expires_at": "2026-04-07T11:30:20.770674",
+              "required_headers": {
+                "Host": ["localhost:9000"],
+                "X-Amz-Meta-Original_filename": ["test_document.txt"]
+              }
+            }
+          }
+
+  - title: Получение ссылки на скачивание файла по file_id
+    description: |
+      Генерирует presigned URL для скачивания файла из постоянного хранилища.
+      Работает только с активными файлами (статус ACTIVE).
+    api: post|api/files/download_url
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetDownloadURLRequest
+      schema:
+        - type_name: GetDownloadURLRequest
+          fields:
+            - Name: FileID
+              Type: "int64"
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|GetDownloadURL|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Ссылка на скачивание"
+        data_example: |-
+          {
+            "data": {
+              "file_id": 67890,
+              "download_url": "http://localhost:9000/support-files/2026/03/31/d119cb6d-094b-579f-086b-114e0028?X-Amz-Algorithm=...",
+              "file_name": "document.pdf",
+              "ticket_id": 123,
+              "expires_at": "2026-03-31T19:35:00+03:00"
+            }
+          }
+
+  - title: Подтверждение загрузки файла
+    description: |
+      Подтверждает, что файл загружен во временное хранилище.
+      Переводит статус аплоада из INITIATED в VALIDATING.
+    api: post|api/uploads/confirm_upload
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: ConfirmUploadRequest
+      schema:
+        - type_name: ConfirmUploadRequest
+          fields:
+            - Name: UploadID
+              Type: "int64"
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: FileID
+              Type: "int64"
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|ConfirmUpload|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Загрузка подтверждена"
+
+  - title: Обновление статуса аплоада
+    description: |
+      Обновляет статус аплоада с проверкой допустимых переходов.
+      Используется воркерами крон-сервиса.
+      Допустимые переходы:
+      - VALIDATING → READY (файл прошёл валидацию)
+      - VALIDATING → INVALID (файл не прошёл валидацию)
+      - INITIATED, VALIDATING, READY → EXPIRED (истёк срок жизни аплоада)
+    api: post|api/uploads/update_upload_status
+    auth_type: basic
+    body:
+      structure_name: UpdateUploadStatusRequest
+      schema:
+        - type_name: UpdateUploadStatusRequest
+          fields:
+            - Name: UploadID
+              Type: "int64"
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: Status
+              Type: "string"
+              Tag: 'json:"status" binding:"required,oneof=READY INVALID EXPIRED"'
+    do: CUSTOM|UpdateUploadStatus|BODY
+    responses:
+      - code: 204
+        description: "Статус аплоада успешно обновлён"
+
+  - title: Отмена загрузки файла
+    description: |
+      Отмена загрузки файла пользователем.
+      Работает на разных этапах жизненного цикла файла.
+    api: post|api/uploads/cancel_upload
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: CancelUploadRequest
+      schema:
+        - type_name: CancelUploadRequest
+          fields:
+            - Name: UploadID
+              Type: "int64"
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+            - Name: FileID
+              Type: "int64"
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|CancelUpload|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Загрузка отменена"
+
+  - title: Получение статуса загрузки
+    description: |
+      Возвращает статус загрузки файла.
+    api: post|api/uploads/get_upload_status
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: GetUploadStatusRequest
+      schema:
+        - type_name: GetUploadStatusRequest
+          fields:
+            - Name: UploadID
+              Type: "int64"
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+    do: CUSTOM|GetUploadStatus|BODY;employee_id
+    responses:
+      - code: 200
+        description: "Статус загрузки"
+        data_example: |-
+          {
+            "data": {
+              "upload_id": 12345,
+              "file_id": 67890,
+              "ticket_id": 111,
+              "status": "USER_REJECT"
+            }
+          }
+
+  - title: Получение аплоадов для валидации
+    description: |
+      Возвращает список аплоадов в статусе VALIDATING.
+      Используется воркером валидации файлов.
+    api: get|api/uploads/uploads_for_validation
+    auth_type: basic
+    do: CUSTOM|GetUploadsForValidation
+    responses:
+      - code: 200
+        description: "Список аплоадов для валидации"
+        data_example: |-
+          {
+            "data": [
+              {
+                "upload_id": 12345,
+                "file_id": 67890,
+                "ch_employee_id": 1005059,
+                "ticket_id": 111,
+                "entity_type": "TICKET_ATTACHMENT",
+                "original_name": "document.pdf",
+                "declared_mime_type": "application/pdf",
+                "declared_size_bytes": 1024000,
+                "tmp_bucket": "support-files-tmp",
+                "tmp_object_key": "2026/03/31/c008ca5c-983a-468e-975a-003d9917",
+                "status": "VALIDATING",
+                "expires_at": "2026-03-31T19:30:00",
+                "created_at": "2026-03-31T19:00:00"
+              }
+            ]
+          }
+      - code: 204
+        description: "Нет аплоадов для валидации"
+
+  - title: Удаление файла
+    description: |
+      Помечает файл на удаление (статус DELETE_PENDING).
+      Используется воркером, помечающим неприкрепленные к заявкам файлы по истечению времени.
+      Фактическое удаление из S3 выполняется фоновым процессом.
+    api: post|api/files/delete
+    auth_type: basic
+    body:
+      structure_name: DeleteFileRequest
+      schema:
+        - type_name: DeleteFileRequest
+          fields:
+            - Name: FileID
+              Type: "int64"
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|DeleteFile|BODY
+    responses:
+      - code: 204
+        description: "Файл успешно удален"
+
+  - title: Получение аплоадов с истекшим сроком жизни
+    description: |
+      Возвращает список аплоадов, у которых истек срок жизни (expires_at < NOW()).
+      Используется воркером очистки временных файлов.
+    api: get|api/uploads/expired_uploads
+    auth_type: basic
+    do: CUSTOM|GetExpiredUploads
+    responses:
+      - code: 200
+        description: "Список аплоадов с истекшим сроком жизни"
+        data_example: |-
+          {
+            "data": [
+              {
+                "upload_id": 12345,
+                "file_id": 67890,
+                "ch_employee_id": 1005059,
+                "ticket_id": 111,
+                "entity_type": "TICKET_ATTACHMENT",
+                "original_name": "document.pdf",
+                "declared_mime_type": "application/pdf",
+                "declared_size_bytes": 1024000,
+                "tmp_bucket": "support-files-tmp",
+                "tmp_object_key": "tmp/45/c4/9",
+                "status": "INITIATED",
+                "expires_at": "2026-03-31T19:30:00",
+                "created_at": "2026-03-31T19:00:00"
+              }
+            ]
+          }
+      - code: 204
+        description: "Нет аплоадов с истекшим сроком жизни"
+
+  - title: Получение файлов для удаления
+    description: |
+      Возвращает список файлов со статусом DELETE_PENDING.
+      Используется воркером удаления файлов из S3.
+    api: get|api/files/files_for_deletion
+    auth_type: basic
+    do: CUSTOM|GetFilesForDeletion
+    responses:
+      - code: 200
+        description: "Список файлов для удаления"
+        data_example: |-
+          {
+            "data": [
+              {
+                "file_id": 67890,
+                "source_upload_id": 12345,
+                "employee_id": 1005059,
+                "ticket_id": 111,
+                "category_id": 50,
+                "original_name": "document.pdf",
+                "mime_type": "application/pdf",
+                "size_bytes": 1024000,
+                "bucket": "support-files",
+                "object_key": "2026/03/31/d119cb6d-094b-579f-086b-114e0028",
+                "status": "DELETE_PENDING",
+                "created_at": "2026-03-31T19:00:00",
+                "deleted_at": null
+              }
+            ]
+          }
+      - code: 204
+        description: "Нет файлов для удаления"
+
+  - title: Получение файлов, неприкрепленных к заявке
+    description: |
+      Возвращает список файлов со статусом ATTACH_PENDING, которые не были прикреплены к заявке за отведенное время.
+      Используется воркером удаления файлов из S3.
+    api: get|api/files/get_files_not_attached_to_ticket_for_deleting
+    auth_type: basic
+    do: CUSTOM|GetFilesNotAttachedToTicketForDeleting
+    responses:
+      - code: 200
+        description: "Список неприкрепленных к заявкам файлов для удаления"
+        data_example: |-
+          {
+            "data": [
+              {
+                "bucket": "wh-support",
+                "status": "ATTACH_PENDING",
+                "file_id": 2,
+                "mime_type": "application/pdf",
+                "ticket_id": null,
+                "created_at": "2026-06-15T15:52:25.293128",
+                "deleted_at": null,
+                "object_key": "final/SYSTEM/c8/1e/2",
+                "size_bytes": 26,
+                "employee_id": 2542,
+                "original_name": "document.pdf",
+                "source_upload_id": 2
+              }
+            ]
+          }
+      - code: 204
+        description: "Нет файлов для удаления"
+
+  - title: Привязка файлов к заявке
+    description: |
+      Привязывает файлы в статусе ATTACH_PENDING к заявке и переводит их в ACTIVE.
+    api: post|api/files/attach_to_ticket
+    auth_type: basic+e
+    query:
+      type_name: QueryParams
+      fields:
+        - Name: EmployeeID
+          Type: int64
+          Tag: 'uri:"employee_id" binding:"required,EmployeeID"'
+    body:
+      structure_name: AttachFilesToTicketRequest
+      schema:
+        - type_name: AttachFilesToTicketRequest
+          fields:
+            - Name: FileIDs
+              Type: "int64"
+              Tag: 'json:"file_ids" binding:"required,min=1,dive,gt=0"'
+              isSlice: true
+            - Name: TicketID
+              Type: "int64"
+              Tag: 'json:"ticket_id" binding:"required,gt=0"'
+    do: CUSTOM|AttachFilesToTicket|BODY;employee_id
+    responses:
+      - code: 204
+        description: "Файлы привязаны к заявке"
+
+  - title: Пометить файл как удалённый
+    description: |
+      Изменяет статус файла на DELETED после успешного удаления из S3.
+      Используется воркером удаления файлов.
+      Работает только с файлами в статусе DELETE_PENDING.
+    api: post|api/files/mark_deleted
+    auth_type: basic
+    body:
+      structure_name: MarkFileDeletedRequest
+      schema:
+        - type_name: MarkFileDeletedRequest
+          fields:
+            - Name: FileID
+              Type: "int64"
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|MarkFileDeleted|BODY
+    responses:
+      - code: 204
+        description: "Файл помечен как удалённый"
+
+  - title: Получение аплоадов для переноса в постоянное хранилище
+    description: |
+      Возвращает список аплоадов в статусе READY, готовых к переносу.
+      Используется воркером переноса файлов.
+    api: get|api/uploads/uploads_for_transfer
+    auth_type: basic
+    do: CUSTOM|GetUploadsForTransfer
+    responses:
+      - code: 200
+        description: "Список аплоадов для переноса"
+        data_example: |-
+          {
+            "data": [
+              {
+                "upload_id": 12345,
+                "file_id": 67890,
+                "ch_employee_id": 1005059,
+                "ticket_id": 111,
+                "entity_type": "TICKET_ATTACHMENT",
+                "original_name": "document.pdf",
+                "declared_mime_type": "application/pdf",
+                "declared_size_bytes": 1024000,
+                "tmp_bucket": "support-files-tmp",
+                "tmp_object_key": "tmp/45/c4/9",
+                "status": "READY",
+                "expires_at": "2026-03-31T19:30:00",
+                "created_at": "2026-03-31T19:00:00"
+              }
+            ]
+          }
+      - code: 204
+        description: "Нет аплоадов для переноса"
+
+  - title: Перенос файла в постоянное хранилище
+    description: |
+      Копирует файл из временного бакета в постоянный.
+      Создает запись о файле в БД и обновляет статус аплоада на TRANSFERRED.
+      Используется воркером переноса файлов.
+      Работает только с аплоадами в статусе READY.
+    api: post|api/files/transfer
+    auth_type: basic
+    body:
+      structure_name: TransferFileRequest
+      schema:
+        - type_name: TransferFileRequest
+          fields:
+            - Name: UploadID
+              Type: "int64"
+              Tag: 'json:"upload_id" binding:"required,gt=0"'
+    do: CUSTOM|TransferFile|BODY
+    responses:
+      - code: 204
+        description: "Файл успешно перенесён в постоянное хранилище"
+
+  - title: Получение информации о файле по file_id
+    description: |
+      Возвращает информацию о файле по ID файла.
+    api: post|api/files/get_file_info
+    auth_type: basic
+    body:
+      structure_name: GetFileInfoRequest
+      schema:
+        - type_name: GetFileInfoRequest
+          fields:
+            - Name: FileID
+              Type: "int64"
+              Tag: 'json:"file_id" binding:"required,gt=0"'
+    do: CUSTOM|GetFileInfo|BODY
+    responses:
+      - code: 200
+        description: "Информация о файле"
+        data_example: |-
+          {
+            "data": {
+              "file_id": 431,
+              "source_upload_id": 55591,
+              "employee_id": 12345,
+              "ticket_id": 17102,
+              "category_id": 325,
+              "original_name": "name",
+              "mime_type": "txt",
+              "size_bytes": 500,
+              "bucket": "Bucket 666",
+              "object_key": "dfgfgfg44g5tfs3w5346jgvdsxae44657kmhbsfdzbmj743",
+              "status": "DELETE_PENDING",
+              "created_at": "2026-04-03T15:17:53.681016",
+              "deleted_at": null
+            }
+          }
+
+  - title: Загрузка файла напрямую в S3
+    description: |
+      Выполняет цикл: валидация, резервирование ID, загрузка в постоянный бакет, создание записи файла.
+    api: post|api/internal/files/upload_file
+    auth_type: basic
+    body:
+      structure_name: InternalUploadFileRequest
+      schema:
+        - type_name: InternalUploadFileRequest
+          fields:
+            - Name: File
+              Type: multipart.FileHeader
+              Tag: 'form:"file" binding:"required"'
+            - Name: EntityType
+              Type: string
+              Tag: 'form:"entity_type" binding:"required,min=1,max=25"'
+    do: CUSTOM|InternalUploadFile|BODY
+    responses:
+      - code: 200
+        description: "Файл успешно загружен"
+        data_example: |-
+          {
+            "data": {
+              "file_id": 431,
+              "file_name": "document.pdf",
+              "file_size": 1024000,
+              "mime_type": "application/pdf",
+              "upload_id": 55591,
+              "object_key": "final/SYSTEM/d1/9c/431",
+              "bucket": "support-files",
+              "status": "ATTACH_PENDING"
+            }
+          }

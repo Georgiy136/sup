@@ -1,0 +1,308 @@
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "approve",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Апрувный статус",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "responsible_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Ожидает обработки",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "approved",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Ожидает обработки",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "responsible_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Ожидает обработки",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "perform",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Заявка подтверждена",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "responsible_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Заявка подтверждена",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "booked",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Заявку взяли в работу",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "responsible_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Заявку взяли в работу",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "unbooked",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Заявку сняли с исполнения",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "responsible_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Работник снял заявку с исполнения",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "rejected",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Заявка отклонена",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Заявка отклонена",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticket_info": {
+    "ticket_name": "Технический Тест",
+    "category_name": "Технический Тест",
+    "operation_type": "completed",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Заявка исполнена",
+    "approve_employee_id": {{employee_id}},
+    "rejected_employee_id": {{employee_id}},
+    "responsible_employee_id": {{employee_id}},
+    "parent_category_name": "Тест",
+    "need_added_information_model": false
+  },
+  "comments": "Заявка исполнена",
+  "tgchat_id": 764471886,
+  "ticket_id": 374812,
+  "employee_id": {{employee_id}},
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ch_dt": "2025-09-15T12:20:11.093269",
+  "comments": "Заявка  № 8601 подтверждена на статусе Апрувный статус.",
+  "tgchat_id": 764471886,
+  "ticket_id": 34,
+  "employee_id": {{employee_id}},
+  "ticket_info": {
+    "ext": [
+      {
+        "value": {
+          "id": 50078527,
+          "name": "SC Tbilisi 3 Bond",
+          "time_zone": "Asia/Tbilisi"
+        },
+        "order_id": 1,
+        "front_data_name": "Офис"
+      },
+      {
+        "value": "1",
+        "order_id": 2,
+        "front_data_name": "secret_field_of_approve"
+      },
+      {
+        "value": "1",
+        "order_id": 3,
+        "front_data_name": "secret_field_of_perform"
+      },
+      {
+        "value": [
+          1,
+          2,
+          3
+        ],
+        "order_id": 4,
+        "front_data_name": "secret_field_of_approve2"
+      }
+    ],
+    "status_id": "APV",
+    "ticket_name": "Тестовая заявка",
+    "category_name": "Тест. Тестовая категория для разных тестов",
+    "scenario_name": null,
+    "operation_type": "approve",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Апрувный статус",
+    "parent_category_name": "Тесты",
+    "responsible_employee_id": 1114627
+  },
+  "type_of_employee_id": "CRT"
+}
+
+###
+POST {{host}}/api/ticket/notification
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ch_dt": "2025-09-15T12:20:11.093269",
+  "comments": "Тестовая заявка",
+  "tgchat_id": 764471886,
+  "ticket_id": 34,
+  "employee_id": {{employee_id}},
+  "ticket_info": {
+     "ext": [{
+            "value": {
+                "id": 508,
+                "name": "К9 Умный склад 4-3"
+            },
+            "order_id": 3,
+            "front_data_name": "Блок"
+        }, {
+            "value": "причина",
+            "order_id": 1,
+            "front_data_name": "Причина исключения улиц"
+        }, {
+            "value": {
+                "id": 507,
+                "name": "Коледино"
+            },
+            "order_id": 2,
+            "front_data_name": "Офис"
+        }, {
+            "value": [{
+                    "stage": {
+                        "id": 0
+                    },
+                    "street": [1, 2, 3],
+                    "section_end": 2,
+                    "section_start": 1
+                }, {
+                    "stage": {
+                        "id": 1
+                    },
+                    "street": [1, 2],
+                    "section_end": 2,
+                    "section_start": 1
+                },{
+                    "stage": {
+                        "id": 2
+                    },
+                    "street": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    "section_end": 4,
+                    "section_start": 3
+                }
+            ],
+            "order_id": 4,
+            "front_data_name": "Улицы и секции"
+        }
+    ],
+    "status_id": "APV",
+    "ticket_name": "Тестовая заявка",
+    "category_name": "Тестовая заявка",
+    "scenario_name": null,
+    "operation_type": "approve",
+    "create_employee_id": {{employee_id}},
+    "status_description": "Апрувный статус",
+    "parent_category_name": "Тесты",
+    "responsible_employee_id": 1114627
+  },
+  "type_of_employee_id": "EMP"
+}
